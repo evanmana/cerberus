@@ -1,6 +1,6 @@
-import pymysql.cursors
+import connectDB
 
-connection = pymysql.connect('localhost', 'root', 'toor', 'cerberusDB')
+connection = connectDB.connect()
 
 try:
     #with connection.cursor() as cursor:
