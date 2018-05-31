@@ -29,6 +29,12 @@ menubar.add_cascade(label="Cerberus", menu=filemenu)
 filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=addNewServiceForm)
 filemenu.add_command(label="Έξοδος", command=master.quit)
 
+settingsMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Ρυθμίσεις", menu=settingsMenu)
+
+aboutMenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Σχετικά", menu=aboutMenu)
+
 master.config(menu=menubar)
 
 
