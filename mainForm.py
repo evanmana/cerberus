@@ -9,7 +9,6 @@ def exitApp(event):
 
 def secretKeys(event):
     kp = (event.char)
-    kp.replace('s', '')
     print("Pressed:  "+kp)
 
 
