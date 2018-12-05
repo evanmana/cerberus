@@ -1,19 +1,7 @@
 from tkinter import *
-import connectDB
 
-def insertService():
-   print("Connecting to MySQL...")
-   connection = connectDB.connect()
-   print("Connected to MySQL...")
-   try:
-    with connection.cursor() as cursor:
-        sql = "INSERT INTO `account` (`nameService`, `email`, `username`,  `password`) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql, (eService.get(), eEmail.get(), eUsername.get(), ePassword.get()))
-    connection.commit()
-   finally:
-    connection.close()
-
-if __name__ == '__main__':
+#if __name__ == '__main__':
+def main():
    master = Tk()
    master.title('Εισαγωγή Νέας Υπηρεσίας')
    master.resizable(0, 0)
@@ -34,7 +22,7 @@ if __name__ == '__main__':
    eUsername.grid(row=2, column=1, pady=5, padx=5)
    ePassword.grid(row=3, column=1, pady=5, padx=5)
 
-   enterButton = Button(master, text="Εισαγωγή Στοιχείων", command=insertService)
+   enterButton = Button(master, text="Εισαγωγή Στοιχείων")
    enterButton.grid(row=4, column=0, columnspan=2, sticky="we", padx=5, pady=5)
 
    mainloop( )
