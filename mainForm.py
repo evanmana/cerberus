@@ -1,7 +1,12 @@
 from tkinter import *
 import addNewServiceForm
 import sqlite3
+
 conn = sqlite3.connect('cerberus.db')
+c = conn.cursor()
+
+for row in c.execute('SELECT * FROM service'):
+    print(row)
 
 
 def exitApp(event):
@@ -9,7 +14,11 @@ def exitApp(event):
 
 def secretKeys(event):
     kp = (event.char)
-    print("Pressed:  "+kp)
+    print(kp)
+
+def getAddNewServiceForm():
+    master.withdraw()
+    addNewServiceForm.main(master)
 
 
 master = Tk()
@@ -21,7 +30,7 @@ menubar = Menu(master)
 filemenu = Menu(menubar, tearoff=0)
 
 menubar.add_cascade(label="Cerberus", menu=filemenu)
-filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=addNewServiceForm.main)
+filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=getAddNewServiceForm)
 filemenu.add_command(label="Έξοδος", command=master.quit)
 
 settingsMenu = Menu(menubar, tearoff=0)
