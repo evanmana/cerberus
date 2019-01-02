@@ -1,91 +1,125 @@
 from tkinter import *
 from tkinter.ttk import Treeview
-import addNewServiceForm
 import sqlite3
-
-conn = sqlite3.connect('cerberus.db')
-try:
-    conn = sqlite3.connect('cerberus.db')
-except sqlite3.Error as e:
-    print(e)
+from cryptography.fernet import Fernet
 
 
-def exitApp(event):
-    master.destroy()
+class cerberus:
+    def __init__(self, master):
+        self.master = master
+        self.master.title('Cerberus Beta')
+        self.master.geometry("860x400")
+        self.master.resizable(0, 0)
 
-def secretKeys(event):
-    kp = (event.char)
-    print(kp)
-    if kp =="0":
-        tv.pack(fill=BOTH, expand=1)
+        self.menubar = Menu(master)
+        filemenu = Menu(self.menubar, tearoff=0)
 
+        self.menubar.add_cascade(label="Cerberus", menu=filemenu)
+        filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=self.getAddNewServiceForm)
+        filemenu.add_command(label="Έξοδος", command=master.quit)
 
-def getAddNewServiceForm():
-    master.withdraw()
-    addNewServiceForm.main(master)
+        settingsMenu = Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label="Ρυθμίσεις", menu=settingsMenu)
 
-def LoadTable():
-    cur = conn.cursor()
-    cur.execute("SELECT name, email, username, password, value FROM service")
+        aboutMenu = Menu(self.menubar, tearoff=0)
+        self.menubar.add_cascade(label="Σχετικά", menu=aboutMenu)
 
-    rows = cur.fetchall()
+        self.master.config(menu=self.menubar)
 
-    i=1
-    for row in rows:
-        if (i % 2) == 0:
-            tag="oddrow"
-        else:
-            tag="evenrow"
-        tv.insert('', 'end', text=row[0], values=(row[1],
-                         row[2],row[3],row[4]),tags = tag)
-        i=i+1
+        self.search = StringVar()
+        self.search.trace("w", lambda name, index, mode, sv=self.search: self.callback())
+        searchEntry = Entry(master, textvariable=self.search)
+        searchEntry.pack(pady=5, padx= 20, fill=X)
 
-master = Tk()
-master.title('Cerberus Beta')
-master.geometry("860x400")
-master.resizable(0, 0)
+        self.table = Treeview()
+        self.table['columns'] = ('email', 'username', 'passwd', 'id')
 
-menubar = Menu(master)
-filemenu = Menu(menubar, tearoff=0)
+        self.table.heading('#0', text='Service', anchor='w')
+        self.table.column('#0', anchor="w",  width=120)
 
-menubar.add_cascade(label="Cerberus", menu=filemenu)
-filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=getAddNewServiceForm)
-filemenu.add_command(label="Έξοδος", command=master.quit)
+        self.table.heading('email', text='Email')
+        self.table.column('email', anchor='center', width=200)
 
-settingsMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Ρυθμίσεις", menu=settingsMenu)
+        self.table.heading('username', text='Username')
+        self.table.column('username', anchor='center', width=100)
 
-aboutMenu = Menu(menubar, tearoff=0)
-menubar.add_cascade(label="Σχετικά", menu=aboutMenu)
+        self.table.heading('passwd', text='Password')
+        self.table.column('passwd', anchor='center', width=100)
 
-master.config(menu=menubar)
+        self.table.heading('id', text='ID')
+        self.table.column('id', anchor='center', width=100)
 
-tv = Treeview()
-tv['columns'] = ('email', 'username', 'passwd', 'id')
+        self.table.tag_configure('oddrow', background='#e6eef2')
+        self.table.tag_configure('evenrow', background='#b3cfdd')
+        self.table.focus()
 
-tv.heading('#0', text='Service', anchor='w')
-tv.column('#0', anchor="w",  width=120)
+        self.loadTable()
+        #table.pack_forget()
 
-tv.heading('email', text='Email')
-tv.column('email', anchor='center', width=200)
+        self.master.bind("<Escape>", self.exitApp)
+        self.master.bind("<Key>", self.secretKeys)
 
-tv.heading('username', text='Username')
-tv.column('username', anchor='center', width=100)
+    def callback(self):
+        print(self.search.get())
+        return True
 
-tv.heading('passwd', text='Password')
-tv.column('passwd', anchor='center', width=100)
+    def exitApp(self, event):
+        self.master.destroy()
 
-tv.heading('id', text='ID')
-tv.column('id', anchor='center', width=100)
+    def secretKeys(self, event):
+        kp = (event.char)
+        print(kp)
+        if kp =="0":
+            for i in self.table.get_children():
+                self.table.delete(i)
 
-tv.pack(fill=BOTH, expand=1)
-tv.tag_configure('oddrow', background='thistle')
-tv.tag_configure('evenrow', background='pink')
-
-tv.pack_forget()
-LoadTable()
+            self.loadTable()
+            self.table.pack(fill=BOTH, expand=1)
 
 
-master.bind("<Escape>", exitApp)
-master.bind("<Key>", secretKeys)
-mainloop( )
+    def getAddNewServiceForm(self):
+        self.master.withdraw()
+        import addNewServiceForm
+        addNewServiceForm.addNewServiceForm(self.master)
+
+    def loadTable(self):
+        key =b''
+        cipher_suite = Fernet(key)
+
+        try:
+            conn = sqlite3.connect('cerberus.db')
+        except sqlite3.Error as e:
+            print(e)
+
+        cur = conn.cursor()
+        cur.execute("SELECT name, email, username, password, value FROM service ")
+
+        rows = cur.fetchall()
+
+        i=1
+        for row in rows:
+            if (i % 2) == 0:
+                tag="oddrow"
+            else:
+                tag="evenrow"
+
+
+            self.table.insert('', 'end', text=cipher_suite.decrypt(row[0]).decode("utf-8"),
+                              values=(cipher_suite.decrypt(row[1]).decode("utf-8"),
+                             cipher_suite.decrypt(row[2]).decode("utf-8"),cipher_suite.decrypt(row[3]).decode("utf-8"),cipher_suite.decrypt(row[4]).decode("utf-8")),tags = tag)
+            i=i+1
+        conn.close()
+
+def a():
+    App.loadTable()
+
+
+if __name__ == "__main__":
+    import platform
+    print(platform.system())
+    root = Tk()
+    App = cerberus(root)
+    a()
+    root.mainloop()
+
+
