@@ -1,8 +1,8 @@
 from tkinter import *
 import sqlite3
 from tkinter.ttk import Combobox
-
 from cryptography.fernet import Fernet
+import keyring
 
 
 def addNewServiceForm(root):
@@ -18,9 +18,12 @@ def addNewServiceForm(root):
     def onDestory():
         master.destroy()
         root.deiconify()
+        root.lift()
+        root.focus_force()
+        root.grab_set()
 
     def insertNewService(event=NONE):
-        key =b''
+        key = keyring.get_password("cerberus", "admin")
         cipher_suite = Fernet(key)
 
         if (eCategory.get()!=''):
@@ -53,7 +56,6 @@ def addNewServiceForm(root):
         else:
             value='---'
 
-        name = cipher_suite.encrypt(bytes(name, encoding="UTF-8"))
         email = cipher_suite.encrypt(bytes(email, encoding="UTF-8"))
         username = cipher_suite.encrypt(bytes(username, encoding="UTF-8"))
         password = cipher_suite.encrypt(bytes(password, encoding="UTF-8"))
@@ -67,6 +69,11 @@ def addNewServiceForm(root):
         exitForm()
 
     master = Toplevel()
+    windowWidth = master.winfo_reqwidth()
+    windowHeight = master.winfo_reqheight()
+    positionRight = int(master.winfo_screenwidth()/2 - windowWidth/2)
+    positionDown = int(master.winfo_screenheight()/5 - windowHeight/5)
+    master.geometry("+{}+{}".format(positionRight, positionDown))
     master.lift()
     master.focus_force()
     master.grab_set()
