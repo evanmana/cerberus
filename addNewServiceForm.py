@@ -36,6 +36,11 @@ def addNewServiceForm(root):
         else:
             name='---'
 
+        if (eServiceUrl.get() !=''):
+            serviceUrl=eServiceUrl.get()
+        else:
+            serviceUrl='---'
+
         if (eEmail.get()!=''):
             email=eEmail.get()
         else:
@@ -62,8 +67,8 @@ def addNewServiceForm(root):
         value = cipher_suite.encrypt(bytes(value, encoding="UTF-8"))
 
         cursor = conn.cursor()
-        cursor.execute('''INSERT INTO service(name, email, username, password, value, category)
-                  VALUES(?,?,?,?,?,?)''', (name, email, username, password, value, category))
+        cursor.execute('''INSERT INTO service(name, email, username, password, value, category, url)
+                  VALUES(?,?,?,?,?,?,?)''', (name, email, username, password, value, category, serviceUrl))
         conn.commit()
         conn.close()
         exitForm()
@@ -83,10 +88,11 @@ def addNewServiceForm(root):
 
     Label(master, text="Κατηγορία:").grid(row=0, sticky="W", padx=5, pady=5)
     Label(master, text="Υπηρεσία:").grid(row=1, sticky="W", padx=5, pady=5)
-    Label(master, text="Email:").grid(row=2, sticky="W", padx=5, pady=5)
-    Label(master, text="Username:").grid(row=3, sticky="W", padx=5, pady=5)
-    Label(master, text="Password:").grid(row=4, sticky="W", padx=5, pady=5)
-    Label(master, text="ID:").grid(row=5, sticky="W", padx=5, pady=5)
+    Label(master, text="URL:").grid(row=2, sticky="W", padx=5, pady=5)
+    Label(master, text="Email:").grid(row=3, sticky="W", padx=5, pady=5)
+    Label(master, text="Username:").grid(row=4, sticky="W", padx=5, pady=5)
+    Label(master, text="Password:").grid(row=5, sticky="W", padx=5, pady=5)
+    Label(master, text="ID:").grid(row=6, sticky="W", padx=5, pady=5)
 
     cursor = conn.cursor()
     cursor.execute("SELECT distinct category FROM service where category<>'Προσωπικά Στοιχεία' and category<>'Κοινωνική Δικτύωση' and category<>'Email' and category<>'Banking' and category<>'Άλλο' ")
@@ -99,6 +105,7 @@ def addNewServiceForm(root):
 
     eCategory.focus()
     eService = Entry(master, width=35)
+    eServiceUrl = Entry(master, width=35)
     eEmail = Entry(master, width=35)
     eUsername = Entry(master, width=35)
     ePassword = Entry(master, width=35)
@@ -106,13 +113,14 @@ def addNewServiceForm(root):
 
     eCategory.grid(row=0, column=1, pady=5, padx=5)
     eService.grid(row=1, column=1, pady=5, padx=5)
-    eEmail.grid(row=2, column=1, pady=5, padx=5)
-    eUsername.grid(row=3, column=1, pady=5, padx=5)
-    ePassword.grid(row=4, column=1, pady=5, padx=5)
-    eValue.grid(row=5, column=1, pady=5, padx=5)
+    eServiceUrl.grid(row=2, column=1, pady=5, padx=5)
+    eEmail.grid(row=3, column=1, pady=5, padx=5)
+    eUsername.grid(row=4, column=1, pady=5, padx=5)
+    ePassword.grid(row=5, column=1, pady=5, padx=5)
+    eValue.grid(row=6, column=1, pady=5, padx=5)
 
     enterButton = Button(master, text="Εισαγωγή Στοιχείων", command=insertNewService)
-    enterButton.grid(row=6, column=0, columnspan=2, sticky="we", padx=5, pady=5)
+    enterButton.grid(row=7, column=0, columnspan=2, sticky="we", padx=5, pady=5)
 
 
     master.bind("<Escape>", exitForm)
