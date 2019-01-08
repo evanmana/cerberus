@@ -69,14 +69,14 @@ class cerberus:
         self.table.focus()
         self.table.pack(fill=BOTH, expand=1)
         self.table.bind("<<TreeviewSelect>>", self.onTableSelect)
-        self.table.bind("<ButtonRelease-1>", self.openURL)
+        self.table.bind("<ButtonRelease-1>", self.openURLService)
 
         self.loadTable()
 
         self.master.bind("<Escape>", self.exitApp)
         self.master.bind("<Key>", self.secretKeys)
 
-    def openURL(self, event):
+    def openURLService(self, event):
         curItem = self.table.item(self.table.focus())
         col = self.table.identify_column(event.x)
 
