@@ -44,7 +44,7 @@ class cerberus:
         searchEntry.pack(pady=5, padx= 20, fill=X)
 
         self.table = Treeview()
-        self.table['columns'] = ('email', 'username', 'passwd', 'id')
+        self.table['columns'] = ('email', 'username', 'passwd', 'id', 'url')
 
         self.table.heading('#0', text='Service', anchor='w')
         self.table.column('#0', anchor="w",  width=120)
@@ -58,6 +58,9 @@ class cerberus:
         self.table.heading('passwd', text='Password')
         self.table.column('passwd', anchor='center', width=100)
 
+        self.table.heading('url', text='URL')
+        self.table.column('url', anchor='center', width=100)
+
         self.table.heading('id', text='ID')
         self.table.column('id', anchor='center', width=100)
 
@@ -66,11 +69,21 @@ class cerberus:
         self.table.focus()
         self.table.pack(fill=BOTH, expand=1)
         self.table.bind("<<TreeviewSelect>>", self.onTableSelect)
+        self.table.bind("<ButtonRelease-1>", self.openURL)
 
         self.loadTable()
 
         self.master.bind("<Escape>", self.exitApp)
         self.master.bind("<Key>", self.secretKeys)
+
+    def openURL(self, event):
+        curItem = self.table.item(self.table.focus())
+        col = self.table.identify_column(event.x)
+
+        if col[-1]=="5":
+            url = curItem['values'][int(col[-1])-1]
+            webbrowser.open_new_tab('http://'+url)
+
 
     def onTableSelect(self, event):
         for item in self.table.selection():
@@ -138,7 +151,7 @@ class cerberus:
             print(e)
 
         cur = conn.cursor()
-        cur.execute("SELECT name, email, username, password, value FROM service ")
+        cur.execute("SELECT name, email, username, password, value, url value FROM service ")
 
         rows = cur.fetchall()
 
@@ -152,7 +165,11 @@ class cerberus:
 
             self.table.insert('', 'end', text=row[0],
                               values=(self.cipher_suite.decrypt(row[1]).decode("utf-8"),
-                             self.cipher_suite.decrypt(row[2]).decode("utf-8"),self.cipher_suite.decrypt(row[3]).decode("utf-8"),self.cipher_suite.decrypt(row[4]).decode("utf-8")),tags = tag)
+                                      self.cipher_suite.decrypt(row[2]).decode("utf-8"),
+                                      self.cipher_suite.decrypt(row[3]).decode("utf-8"),
+                                      self.cipher_suite.decrypt(row[4]).decode("utf-8"),
+                                      row[5]),
+                              tags = tag)
             i=i+1
         conn.close()
 
@@ -163,10 +180,6 @@ def a():
 if __name__ == "__main__":
     import platform
     print(platform.system())
-    url = 'http://www.python.org/'
-
-    # Open URL in a new tab, if a browser window is already open.
-    webbrowser.open_new_tab(url + 'doc/')
 
     root = Tk()
     App = cerberus(root)
