@@ -66,6 +66,8 @@ class cerberus:
 
         self.table.tag_configure('oddrow', background='#e6eef2')
         self.table.tag_configure('evenrow', background='#b3cfdd')
+        self.table.tag_configure('focus', background='#afc8cc')
+        self.last_focus = None
         self.table.focus()
         self.table.pack(fill=BOTH, expand=1)
         self.table.bind("<<TreeviewSelect>>", self.onTableSelect)
@@ -82,6 +84,13 @@ class cerberus:
         self.master.config(cursor="")
 
     def changePointerOnHover(self, event):
+        _iid = self.table.identify_row(event.y)
+        if _iid != self.last_focus:
+            if self.last_focus:
+                self.table.item(self.last_focus, tags=[self.table.item(_iid, "tags")])
+            self.table.item(_iid, tags=['focus'])
+            self.last_focus = _iid
+
         curItem = self.table.item(self.table.identify('item', event.x, event.y))
         if curItem['values'] !='':
             col = self.table.identify_column(event.x)
