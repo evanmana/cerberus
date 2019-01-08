@@ -70,11 +70,27 @@ class cerberus:
         self.table.pack(fill=BOTH, expand=1)
         self.table.bind("<<TreeviewSelect>>", self.onTableSelect)
         self.table.bind("<ButtonRelease-1>", self.openURLService)
+        self.table.bind("<Motion>", self.changePointerOnHover)
+        self.table.bind("<Leave>", self.setDefaultPointer)
 
         self.loadTable()
 
         self.master.bind("<Escape>", self.exitApp)
         self.master.bind("<Key>", self.secretKeys)
+
+    def setDefaultPointer(self, event):
+        self.master.config(cursor="")
+
+    def changePointerOnHover(self, event):
+        curItem = self.table.item(self.table.identify('item', event.x, event.y))
+        if curItem['values'] !='':
+            col = self.table.identify_column(event.x)
+            url = curItem['values'][int(col[-1])-1]
+
+            if col[-1]=="5" and url !='---':
+                self.master.config(cursor="hand2")
+            else:
+                self.master.config(cursor="")
 
     def openURLService(self, event):
         curItem = self.table.item(self.table.focus())
@@ -82,7 +98,8 @@ class cerberus:
 
         if col[-1]=="5":
             url = curItem['values'][int(col[-1])-1]
-            webbrowser.open_new_tab('http://'+url)
+            if url != '---':
+                webbrowser.open_new_tab('http://'+url)
 
 
     def onTableSelect(self, event):
