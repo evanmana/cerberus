@@ -75,17 +75,17 @@ class cerberus:
         self.table.bind("<<TreeviewSelect>>", self.onTableSelect)
         self.table.bind("<ButtonRelease-1>", self.openURLService)
         self.table.bind("<Motion>", self.changePointerOnHover)
-        self.table.bind("<Leave>", self.setDefaultPointer)
+        self.table.bind("<Leave>", self.onLeaveTable)
 
         self.loadTable()
 
         self.master.bind("<Escape>", self.exitApp)
         self.master.bind("<Key>", self.secretKeys)
 
-    def setDefaultPointer(self, event):
-        self.master.config(cursor="")
-        self.table.item(self.last_focus, tags=[self.last_focus_tag])
-        self.last_focus = None
+    def onLeaveTable(self, event):
+        if self.table.winfo_ismapped():
+            self.table.item(self.last_focus, tags=[self.last_focus_tag])
+            self.last_focus = None
 
     def changePointerOnHover(self, event):
         _iid = self.table.identify_row(event.y)
