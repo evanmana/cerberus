@@ -5,6 +5,7 @@ import keyring
 from cryptography.fernet import Fernet
 import webbrowser
 
+
 class cerberus:
     def __init__(self, master):
         self.runAppFirstTime()
@@ -47,7 +48,7 @@ class cerberus:
         self.table['columns'] = ('email', 'username', 'passwd', 'id', 'url')
 
         self.table.heading('#0', text='Service', anchor='w')
-        self.table.column('#0', anchor="w",  width=120)
+        self.table.column('#0', anchor="w",  width=125)
 
         self.table.heading('email', text='Email')
         self.table.column('email', anchor='center', width=200)
@@ -59,15 +60,16 @@ class cerberus:
         self.table.column('passwd', anchor='center', width=100)
 
         self.table.heading('url', text='URL')
-        self.table.column('url', anchor='center', width=100)
+        self.table.column('url', anchor='center', width=120)
 
         self.table.heading('id', text='ID')
         self.table.column('id', anchor='center', width=100)
 
         self.table.tag_configure('oddrow', background='#e6eef2')
         self.table.tag_configure('evenrow', background='#b3cfdd')
-        self.table.tag_configure('focus', background='#afc8cc')
+        self.table.tag_configure('focus', background='#c6b6b4')
         self.last_focus = None
+        self.last_focus_tag = None
         self.table.focus()
         self.table.pack(fill=BOTH, expand=1)
         self.table.bind("<<TreeviewSelect>>", self.onTableSelect)
@@ -82,17 +84,22 @@ class cerberus:
 
     def setDefaultPointer(self, event):
         self.master.config(cursor="")
+        self.table.item(self.last_focus, tags=[self.last_focus_tag])
+        self.last_focus = None
 
     def changePointerOnHover(self, event):
         _iid = self.table.identify_row(event.y)
+
         if _iid != self.last_focus:
             if self.last_focus:
-                self.table.item(self.last_focus, tags=[self.table.item(_iid, "tags")])
+                self.table.item(self.last_focus, tags=[self.last_focus_tag])
+
+            self.last_focus_tag = self.table.item(_iid, "tag")
             self.table.item(_iid, tags=['focus'])
             self.last_focus = _iid
 
         curItem = self.table.item(self.table.identify('item', event.x, event.y))
-        if curItem['values'] !='':
+        if curItem['values'] != '':
             col = self.table.identify_column(event.x)
             url = curItem['values'][int(col[-1])-1]
 
@@ -105,7 +112,7 @@ class cerberus:
         curItem = self.table.item(self.table.focus())
         col = self.table.identify_column(event.x)
 
-        if col[-1]=="5":
+        if col[-1] == "5":
             url = curItem['values'][int(col[-1])-1]
             if url != '---':
                 webbrowser.open_new_tab('http://'+url)
@@ -117,7 +124,7 @@ class cerberus:
             print(item_text)
 
     def runAppFirstTime(self):
-        if keyring.get_password("cerberus", "admin")==None:
+        if keyring.get_password("cerberus", "admin") == None:
             key = Fernet.generate_key()
             keyring.set_password("cerberus", "admin", key)
 
@@ -131,7 +138,7 @@ class cerberus:
 
         cur = conn.cursor()
         if self.search.get()!='':
-            cur.execute("SELECT name, email, username, password, value FROM service WHERE name LIKE '%"+self.search.get()+"%' or name LIKE '%"+self.search.get().upper()+"%'") #('%'+self.search.get()+'%',),'Α')
+            cur.execute("SELECT name, email, username, password, value, url FROM service WHERE name LIKE '%"+self.search.get()+"%' or name LIKE '%"+self.search.get().upper()+"%'") #('%'+self.search.get()+'%',),'Α')
 
         rows = cur.fetchall()
         cur.close()
@@ -143,14 +150,14 @@ class cerberus:
         i=1
         for row in rows:
             if (i % 2) == 0:
-                tag="oddrow"
+                tag = "oddrow"
             else:
-                tag="evenrow"
+                tag = "evenrow"
 
 
             self.table.insert('', 'end', text=row[0],
                               values=(self.cipher_suite.decrypt(row[1]).decode("utf-8"),
-                             self.cipher_suite.decrypt(row[2]).decode("utf-8"),self.cipher_suite.decrypt(row[3]).decode("utf-8"),self.cipher_suite.decrypt(row[4]).decode("utf-8")),tags = tag)
+                             self.cipher_suite.decrypt(row[2]).decode("utf-8"),self.cipher_suite.decrypt(row[3]).decode("utf-8"),self.cipher_suite.decrypt(row[4]).decode("utf-8"),row[5]),tags = tag)
             i=i+1
 
     def exitApp(self, event):
@@ -188,16 +195,17 @@ class cerberus:
             else:
                 tag="evenrow"
 
-
             self.table.insert('', 'end', text=row[0],
                               values=(self.cipher_suite.decrypt(row[1]).decode("utf-8"),
                                       self.cipher_suite.decrypt(row[2]).decode("utf-8"),
                                       self.cipher_suite.decrypt(row[3]).decode("utf-8"),
                                       self.cipher_suite.decrypt(row[4]).decode("utf-8"),
                                       row[5]),
-                              tags = tag)
-            i=i+1
+                              tags = tag )
+            i = i+1
+
         conn.close()
+
 
 def a():
     App.loadTable()
@@ -211,5 +219,3 @@ if __name__ == "__main__":
     App = cerberus(root)
 
     root.mainloop()
-
-
