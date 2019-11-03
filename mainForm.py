@@ -69,10 +69,6 @@ class Cerberus:
         for col in self.table['columns'] :
             self.table.heading(col, command=lambda c=col: self.sortby(self.table, c, 0))
 
-
-        #self.table.heading("#0", text="Services", anchor='center')
-        #self.table.column('#0', anchor="w", width=125)
-
         self.table.heading('Services', text='Services')
         self.table.column('Services', anchor='center', width=200)
 
@@ -264,5 +260,6 @@ if __name__ == "__main__":
 
     root = Tk()
     App = Cerberus(root)
-
     root.mainloop()
+
+
