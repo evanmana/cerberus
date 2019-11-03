@@ -6,7 +6,6 @@ import keyring
 
 
 def addNewServiceForm(root):
-    conn = sqlite3.connect('cerberus.db')
     try:
         conn = sqlite3.connect('cerberus.db')
     except sqlite3.Error as e:
@@ -26,40 +25,40 @@ def addNewServiceForm(root):
         key = keyring.get_password("cerberus", "admin")
         cipher_suite = Fernet(key)
 
-        if (eCategory.get()!=''):
-            category=eCategory.get()
+        if eCategory.get() != '':
+            category = eCategory.get()
         else:
-            category='---'
+            category = '---'
 
-        if (eService.get() !=''):
-            name=eService.get()
+        if eService.get() != '':
+            name = eService.get()
         else:
-            name='---'
+            name = '---'
 
-        if (eServiceUrl.get() !=''):
-            serviceUrl=eServiceUrl.get()
+        if eServiceUrl.get() != '':
+            serviceUrl = eServiceUrl.get()
         else:
-            serviceUrl='---'
+            serviceUrl = '---'
 
-        if (eEmail.get()!=''):
-            email=eEmail.get()
+        if eEmail.get() != '':
+            email = eEmail.get()
         else:
-            email='---'
+            email = '---'
 
-        if (eUsername.get()!=''):
-            username=eUsername.get()
+        if eUsername.get() != '':
+            username = eUsername.get()
         else:
-            username='---'
+            username = '---'
 
-        if (ePassword.get()!=''):
-            password=ePassword.get()
+        if ePassword.get() != '':
+            password = ePassword.get()
         else:
-            password='---'
+            password = '---'
 
-        if (eValue.get()!=''):
-            value=eValue.get()
+        if eValue.get() != '':
+            value = eValue.get()
         else:
-            value='---'
+            value = '---'
 
         email = cipher_suite.encrypt(bytes(email, encoding="UTF-8"))
         username = cipher_suite.encrypt(bytes(username, encoding="UTF-8"))
@@ -67,17 +66,21 @@ def addNewServiceForm(root):
         value = cipher_suite.encrypt(bytes(value, encoding="UTF-8"))
 
         cursor = conn.cursor()
-        cursor.execute('''INSERT INTO service(name, email, username, password, value, category, url)
+        try:
+            cursor.execute('''INSERT INTO service(name, email, username, password, value, category, url)
                   VALUES(?,?,?,?,?,?,?)''', (name, email, username, password, value, category, serviceUrl))
-        conn.commit()
-        conn.close()
-        exitForm()
+            conn.commit()
+            conn.close()
+            exitForm()
+        except sqlite3.IntegrityError as e:
+            from tkinter import messagebox
+            messagebox.showerror("Μήνυμα Σφάλματος", "Η Υπηρεσία υπάρχει ήδη.")
 
     master = Toplevel()
     windowWidth = master.winfo_reqwidth()
     windowHeight = master.winfo_reqheight()
-    positionRight = int(master.winfo_screenwidth()/2 - windowWidth/2)
-    positionDown = int(master.winfo_screenheight()/5 - windowHeight/5)
+    positionRight = int(master.winfo_screenwidth() / 2 - windowWidth / 2)
+    positionDown = int(master.winfo_screenheight() / 5 - windowHeight / 5)
     master.geometry("+{}+{}".format(positionRight, positionDown))
     master.lift()
     master.focus_force()
@@ -95,13 +98,15 @@ def addNewServiceForm(root):
     Label(master, text="ID:").grid(row=6, sticky="W", padx=5, pady=5)
 
     cursor = conn.cursor()
-    cursor.execute("SELECT distinct category FROM service where category<>'Προσωπικά Στοιχεία' and category<>'Κοινωνική Δικτύωση' and category<>'Email' and category<>'Banking' and category<>'Άλλο' ")
+    cursor.execute(
+        "SELECT distinct category FROM service where category<>'Προσωπικά Στοιχεία' and category<>'Κοινωνική Δικτύωση' and category<>'Email' and category<>'Banking' and category<>'Άλλο' ")
     rows = cursor.fetchall()
     cursor.close()
 
-    eCategory = Combobox(master, width=33, values=("Προσωπικά Στοιχεία", "Κοινωνική Δικτύωση", "Email", "Banking", "Άλλο"))
+    eCategory = Combobox(master, width=33,
+                         values=("Προσωπικά Στοιχεία", "Κοινωνική Δικτύωση", "Email", "Banking", "Άλλο"))
     for row in rows:
-        eCategory['values'] = eCategory['values']+row
+        eCategory['values'] = eCategory['values'] + row
 
     eCategory.focus()
     eService = Entry(master, width=35)
@@ -122,8 +127,7 @@ def addNewServiceForm(root):
     enterButton = Button(master, text="Εισαγωγή Στοιχείων", command=insertNewService)
     enterButton.grid(row=7, column=0, columnspan=2, sticky="we", padx=5, pady=5)
 
-
     master.bind("<Escape>", exitForm)
     master.bind("<Return>", insertNewService)
     master.protocol("WM_DELETE_WINDOW", onDestory)
-    mainloop( )
+    mainloop()
