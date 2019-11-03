@@ -71,8 +71,6 @@ def editServiceForm(root, service):
                   where name=?''', (service, email, username, password, value, category, serviceUrl, oldService))
         conn.commit()
         conn.close()
-        import mainForm
-        mainForm.App.loadTable()
         exitForm()
 
     master = Toplevel()
