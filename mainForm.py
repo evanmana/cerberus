@@ -5,6 +5,7 @@ import sqlite3
 import keyring
 from cryptography.fernet import Fernet
 import webbrowser
+from tkinter import messagebox
 
 
 class Cerberus:
@@ -12,6 +13,7 @@ class Cerberus:
         self.runAppFirstTime()
 
         self.key = keyring.get_password("cerberus", "admin")
+        # self.key = 'YUaMl3PfzNvyJLzlbPzVCb78wcobfLjhcXgACw9rvkk='
         self.cipher_suite = Fernet(self.key)
 
         self.master = master
@@ -30,7 +32,8 @@ class Cerberus:
         self.menubar.add_cascade(label="Cerberus", menu=filemenu)
         filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=self.getAddNewServiceForm)
         filemenu.add_command(label="Επεξεργασία Υπηρεσίας", command=self.getEditServiceForm)
-        filemenu.add_command(label="Έξοδος", command=master.quit)
+        filemenu.add_command(label="Διαγραφή Υπηρεσίας", command=self.deleteService)
+        filemenu.add_command(label="Έξοδος", command=self.exitApp)
 
         settingsMenu = Menu(self.menubar, tearoff=0)
         self.menubar.add_cascade(label="Ρυθμίσεις", menu=settingsMenu)
@@ -47,14 +50,6 @@ class Cerberus:
 
         # Fix BUG with Treeview colors in Python3.7
         def fixed_map(option):
-            # Fix for setting text colour for Tkinter 8.6.9
-            # From: https://core.tcl.tk/tk/info/509cafafae
-            #
-            # Returns the style map for 'option' with any styles starting with
-            # ('!disabled', '!selected', ...) filtered out.
-
-            # style.map() returns an empty list for missing options, so this
-            # should be future-safe.
             return [elm for elm in style.map('Treeview', query_opt=option) if
                     elm[:2] != ('!disabled', '!selected')]
 
@@ -64,9 +59,9 @@ class Cerberus:
 
         self.table = Treeview()
         self.table['show'] = 'headings'
-        self.table['columns'] = ('Services','email', 'username', 'passwd', 'id', 'category', 'url')
+        self.table['columns'] = ('Services', 'email', 'username', 'passwd', 'id', 'category', 'url')
 
-        for col in self.table['columns'] :
+        for col in self.table['columns']:
             self.table.heading(col, command=lambda c=col: self.sortby(self.table, c, 0))
 
         self.table.heading('Services', text='Services')
@@ -101,7 +96,7 @@ class Cerberus:
         self.table.bind("<ButtonRelease-1>", self.openURLService)
         self.table.bind("<Motion>", self.changePointerOnHover)
 
-        self.loadTable()
+        self.loadTable(self)
 
         self.master.bind("<Escape>", self.exitApp)
 
@@ -121,7 +116,7 @@ class Cerberus:
             col = self.table.identify_column(event.x)
             url = curItem['values'][int(col[-1]) - 1]
 
-            if col[-1] == "6" and url != '---':
+            if col[-1] == "7" and url != '---':
                 self.master.config(cursor="hand2")
             else:
                 self.master.config(cursor="")
@@ -131,7 +126,7 @@ class Cerberus:
         col = self.table.identify_column(event.x)
         region = self.table.identify("region", event.x, event.y)
 
-        if col[-1] == "6" and region != 'heading':
+        if col[-1] == "7" and region != 'heading':
             url = curItem['values'][int(col[-1]) - 1]
             if url != '---':
                 webbrowser.open_new_tab('http://' + str(url))
@@ -188,24 +183,23 @@ class Cerberus:
                                       row[6]), tags=tag)
             i = i + 1
 
-    def exitApp(self, event):
+    def exitApp(self, event=None):
         self.master.destroy()
 
     def getAddNewServiceForm(self):
         self.master.withdraw()
         import addNewServiceForm
-        addNewServiceForm.addNewServiceForm(self.master)
+        addNewServiceForm.addNewServiceForm(self)
 
     def getEditServiceForm(self):
         service = self.getSelectedService(self)
 
         if service is None:
-            from tkinter import messagebox
             messagebox.showerror("Μήνυμα Σφάλματος", "Παρακαλώ επιλέξτε την Υπηρεσία που θέλετε να Επεξεργαστείτε.")
         else:
             self.master.withdraw()
             import editServiceForm
-            editServiceForm.editServiceForm(self.master, service)
+            editServiceForm.editServiceForm(self, service)
 
     def sortby(self, tree, col, descending):
         """sort tree contents when a column header is clicked on"""
@@ -221,6 +215,7 @@ class Cerberus:
         tree.heading(col,
                      command=lambda col=col: self.sortby(tree, col, int(not descending)))
 
+    @staticmethod
     def loadTable(self):
         try:
             conn = sqlite3.connect('cerberus.db')
@@ -228,7 +223,7 @@ class Cerberus:
             print(e)
 
         cur = conn.cursor()
-        cur.execute("SELECT name, email, username, password, value, category, url value FROM service ")
+        cur.execute("SELECT name, email, username, password, value, category, url value FROM service")
 
         rows = cur.fetchall()
 
@@ -243,7 +238,7 @@ class Cerberus:
                 tag = "evenrow"
 
             self.table.insert('', 'end',
-                              values=(row[0],self.cipher_suite.decrypt(row[1]).decode("utf-8"),
+                              values=(row[0], self.cipher_suite.decrypt(row[1]).decode("utf-8"),
                                       self.cipher_suite.decrypt(row[2]).decode("utf-8"),
                                       self.cipher_suite.decrypt(row[3]).decode("utf-8"),
                                       self.cipher_suite.decrypt(row[4]).decode("utf-8"),
@@ -253,13 +248,32 @@ class Cerberus:
 
         conn.close()
 
+    def deleteService(self):
+        service = self.getSelectedService(self)
+
+        if service is None:
+            messagebox.showerror("Μήνυμα Σφάλματος", "Παρακαλώ επιλέξτε την Υπηρεσία που θέλετε να Διαγράξετε.")
+        else:
+            msgBox = messagebox.askquestion('Διαγραφή: {}'.format(service[0]),
+                                            'Είστε σίγουρος ότι θέλετε να διαγράψετε την Υπηρεσία: ''{}'' ?'.format(
+                                                service[0]),
+                                            icon='warning')
+            if msgBox == 'yes':
+                try:
+                    conn = sqlite3.connect('cerberus.db')
+                except sqlite3.Error as e:
+                    print(e)
+                sql = 'DELETE FROM service WHERE name=?'
+                cur = conn.cursor()
+                cur.execute(sql, (service[0],))
+                conn.commit()
+                conn.close()
+                self.loadTable(self)
+
 
 if __name__ == "__main__":
     import platform
     print(platform.system())
-
     root = Tk()
     App = Cerberus(root)
     root.mainloop()
-
-
