@@ -5,22 +5,21 @@ from cryptography.fernet import Fernet
 import keyring
 
 
-def editServiceForm(root, service):
+def editServiceForm(self, service):
     print(service)
     try:
         conn = sqlite3.connect('cerberus.db')
     except sqlite3.Error as e:
         print(e)
 
-    def exitForm(event=NONE):
-        onDestory()
-
-    def onDestory():
+    def onDestory(event=NONE):
         master.destroy()
-        root.deiconify()
-        root.lift()
-        root.focus_force()
-        root.grab_set()
+        self.master.deiconify()
+        self.master.lift()
+        self.master.focus_force()
+        self.master.grab_set()
+        import mainForm
+        mainForm.Cerberus.loadTable(self)
 
     def editService(event=NONE):
         key = keyring.get_password("cerberus", "admin")
@@ -71,7 +70,7 @@ def editServiceForm(root, service):
                   where name=?''', (service, email, username, password, value, category, serviceUrl, oldService))
         conn.commit()
         conn.close()
-        exitForm()
+        onDestory()
 
     master = Toplevel()
     windowWidth = master.winfo_reqwidth()
@@ -93,7 +92,6 @@ def editServiceForm(root, service):
     Label(master, text="Username:").grid(row=4, sticky="W", padx=5, pady=5)
     Label(master, text="Password:").grid(row=5, sticky="W", padx=5, pady=5)
     Label(master, text="ID:").grid(row=6, sticky="W", padx=5, pady=5)
-
 
     eCategory = Combobox(master, width=33,
                          values=("Προσωπικά Στοιχεία", "Κοινωνική Δικτύωση", "Email", "Banking", "Άλλο"))
@@ -131,7 +129,7 @@ def editServiceForm(root, service):
     enterButton = Button(master, text="Αποθήκευση", command=editService)
     enterButton.grid(row=7, column=0, columnspan=2, sticky="we", padx=5, pady=5)
 
-    master.bind("<Escape>", exitForm)
+    master.bind("<Escape>", onDestory)
     master.bind("<Return>", editService)
     master.protocol("WM_DELETE_WINDOW", onDestory)
     mainloop()
