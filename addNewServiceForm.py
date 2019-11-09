@@ -5,21 +5,20 @@ from cryptography.fernet import Fernet
 import keyring
 
 
-def addNewServiceForm(root):
+def addNewServiceForm(self):
     try:
         conn = sqlite3.connect('cerberus.db')
     except sqlite3.Error as e:
         print(e)
 
-    def exitForm(event=NONE):
-        onDestory()
-
-    def onDestory():
+    def onDestory(event=NONE):
         master.destroy()
-        root.deiconify()
-        root.lift()
-        root.focus_force()
-        root.grab_set()
+        self.master.deiconify()
+        self.master.lift()
+        self.master.focus_force()
+        self.master.grab_set()
+        import mainForm
+        mainForm.Cerberus.loadTable(self)
 
     def insertNewService(event=NONE):
         key = keyring.get_password("cerberus", "admin")
@@ -71,7 +70,7 @@ def addNewServiceForm(root):
                   VALUES(?,?,?,?,?,?,?)''', (name, email, username, password, value, category, serviceUrl))
             conn.commit()
             conn.close()
-            exitForm()
+            onDestory()
         except sqlite3.IntegrityError as e:
             from tkinter import messagebox
             messagebox.showerror("Μήνυμα Σφάλματος", "Η Υπηρεσία υπάρχει ήδη.")
@@ -127,7 +126,7 @@ def addNewServiceForm(root):
     enterButton = Button(master, text="Εισαγωγή Στοιχείων", command=insertNewService)
     enterButton.grid(row=7, column=0, columnspan=2, sticky="we", padx=5, pady=5)
 
-    master.bind("<Escape>", exitForm)
+    master.bind("<Escape>", onDestory)
     master.bind("<Return>", insertNewService)
     master.protocol("WM_DELETE_WINDOW", onDestory)
     mainloop()
