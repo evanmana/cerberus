@@ -43,6 +43,12 @@ class Cerberus:
 
         self.master.config(menu=self.menubar)
 
+        self.popup = Menu(root, tearoff=0)
+        self.popup.add_command(label="Επεξεργασία Υπηρεσίας", command=self.getEditServiceForm)
+        self.popup.add_command(label="Διαγραφή Υπηρεσίας", command=self.deleteService)
+        self.popup.add_separator()
+        self.popup.add_command(label="Έξοδος", command=self.exitApp)
+
         self.search = StringVar()
         self.search.trace("w", lambda name, index, mode, sv=self.search: self.searchService())
         searchEntry = Entry(master, textvariable=self.search)
@@ -95,6 +101,7 @@ class Cerberus:
         self.table.bind("<<TreeviewSelect>>", self.onTableSelect)
         self.table.bind("<ButtonRelease-1>", self.openURLService)
         self.table.bind("<Motion>", self.changePointerOnHover)
+        self.table.bind("<Button-3>", self.popupMenu)
 
         self.loadTable(self)
 
@@ -269,6 +276,17 @@ class Cerberus:
                 conn.commit()
                 conn.close()
                 self.loadTable(self)
+
+    def popupMenu(self, event):
+        serviceId = self.table.identify_row(event.y)
+
+        if serviceId:
+            self.table.selection_set(serviceId)
+            try:
+                self.popup.tk_popup(event.x_root, event.y_root)
+            finally:
+                self.popup.grab_release()
+
 
 
 if __name__ == "__main__":
