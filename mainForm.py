@@ -33,6 +33,7 @@ class Cerberus:
         filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=self.getAddNewServiceForm)
         filemenu.add_command(label="Επεξεργασία Υπηρεσίας", command=self.getEditServiceForm)
         filemenu.add_command(label="Διαγραφή Υπηρεσίας", command=self.deleteService)
+        filemenu.add_separator()
         filemenu.add_command(label="Έξοδος", command=self.exitApp)
 
         settingsMenu = Menu(self.menubar, tearoff=0)
