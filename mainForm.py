@@ -255,6 +255,9 @@ class Cerberus:
 
         conn.close()
 
+        self.last_focus = None
+        self.table.selection()
+
     def deleteService(self):
         service = self.getSelectedService(self)
 
@@ -286,7 +289,6 @@ class Cerberus:
                 self.popup.tk_popup(event.x_root, event.y_root)
             finally:
                 self.popup.grab_release()
-
 
 
 if __name__ == "__main__":
