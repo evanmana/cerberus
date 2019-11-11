@@ -5,6 +5,8 @@ import sqlite3
 from cryptography.fernet import Fernet
 import webbrowser
 from tkinter import messagebox
+from tkinter import filedialog
+import csv
 
 
 class Cerberus:
@@ -31,7 +33,7 @@ class Cerberus:
         filemenu.add_command(label="Επεξεργασία Υπηρεσίας", command=self.getEditServiceForm)
         filemenu.add_command(label="Διαγραφή Υπηρεσίας", command=self.deleteService)
         filemenu.add_separator()
-        filemenu.add_command(label="Εξαγωγή σε Excel", command=self.exitApp)
+        filemenu.add_command(label="Εξαγωγή σε Excel", command=self.exportToCSV)
         filemenu.add_separator()
         filemenu.add_command(label="Έξοδος", command=self.exitApp)
 
@@ -332,6 +334,45 @@ class Cerberus:
                 self.popup.tk_popup(event.x_root, event.y_root)
             finally:
                 self.popup.grab_release()
+
+    def exportToCSV(self):
+        try:
+            conn = sqlite3.connect('cerberus.db')
+        except sqlite3.Error as e:
+            print(e)
+
+        cur = conn.cursor()
+        cur.execute("SELECT category, name, email, username, password, value, url value FROM service")
+
+        rows = cur.fetchall()
+
+
+        csvData = [['Κατηγορία', 'Υπηρεσία', 'Email', 'Όνομα Χρήστη', 'Κωδικός', 'ID', 'URL',]]
+
+        for row in rows:
+            print(row[0])
+            print(row[1])
+            print(self.cipher_suite.decrypt(row[2]).decode("utf-8"))
+            print(self.cipher_suite.decrypt(row[3]).decode("utf-8"))
+            print(self.cipher_suite.decrypt(row[4]).decode("utf-8"))
+            print(self.cipher_suite.decrypt(row[5]).decode("utf-8"))
+            print(row[6])
+            csvData = csvData + [[row[0],
+                                  row[1],
+                                  self.cipher_suite.decrypt(row[2]).decode("utf-8"),
+                                  self.cipher_suite.decrypt(row[3]).decode("utf-8"),
+                                  self.cipher_suite.decrypt(row[4]).decode("utf-8"),
+                                  self.cipher_suite.decrypt(row[5]).decode("utf-8"),
+                                  row[6]
+                                  ]]
+        filePath = filedialog.asksaveasfile(initialdir="~",
+                                            initialfile= 'cerberus',
+                                            title="Επιλογή Αρχείου",
+                                            filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
+
+        with open(filePath, 'ab') as csvFile:
+            csvFile = csv.writer(csvFile)
+            csvFile.writerows(csvData)
 
 
 if __name__ == "__main__":
