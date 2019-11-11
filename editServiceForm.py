@@ -2,7 +2,7 @@ from tkinter import *
 import sqlite3
 from tkinter.ttk import Combobox
 from cryptography.fernet import Fernet
-import keyring
+import mainForm
 
 
 def editServiceForm(self, service):
@@ -18,11 +18,10 @@ def editServiceForm(self, service):
         self.master.lift()
         self.master.focus_force()
         self.master.grab_set()
-        import mainForm
         mainForm.Cerberus.loadTable(self)
 
     def editService(event=NONE):
-        key = keyring.get_password("cerberus", "admin")
+        key = mainForm.Cerberus.getMasterToken()
         cipher_suite = Fernet(key)
 
         if eCategory.get() != '':
