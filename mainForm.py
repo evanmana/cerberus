@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter.ttk import Treeview
 from tkinter import ttk
 import sqlite3
-import keyring
 from cryptography.fernet import Fernet
 import webbrowser
 from tkinter import messagebox
@@ -10,14 +9,12 @@ from tkinter import messagebox
 
 class Cerberus:
     def __init__(self, master):
-        self.runAppFirstTime()
+        self.versionApp, self.key = self.initApp()
 
-        self.key = keyring.get_password("cerberus", "admin")
-        # self.key = 'YUaMl3PfzNvyJLzlbPzVCb78wcobfLjhcXgACw9rvkk='
         self.cipher_suite = Fernet(self.key)
 
         self.master = master
-        self.master.title('Cerberus Beta')
+        self.master.title('Cerberus {}'.format(self.versionApp))
         windowWidth = self.master.winfo_reqwidth()
         windowHeight = self.master.winfo_reqheight()
         positionRight = int(self.master.winfo_screenwidth() / 3 - windowWidth / 3)
@@ -33,6 +30,8 @@ class Cerberus:
         filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=self.getAddNewServiceForm)
         filemenu.add_command(label="Επεξεργασία Υπηρεσίας", command=self.getEditServiceForm)
         filemenu.add_command(label="Διαγραφή Υπηρεσίας", command=self.deleteService)
+        filemenu.add_separator()
+        filemenu.add_command(label="Εξαγωγή σε Excel", command=self.exitApp)
         filemenu.add_separator()
         filemenu.add_command(label="Έξοδος", command=self.exitApp)
 
@@ -149,10 +148,36 @@ class Cerberus:
             selectedRow = self.table.item(item, "value")
             return selectedRow
 
-    def runAppFirstTime(self):
-        if keyring.get_password("cerberus", "admin") is None:
-            key = Fernet.generate_key()
-            keyring.set_password("cerberus", "admin", key)
+    def initApp(self):
+        print("Initialize Cerberus App")
+        try:
+            conn = sqlite3.connect('cerberus.db')
+        except sqlite3.Error as e:
+            print(e)
+
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT version, masterToken FROM cerberusParameters")
+        row = cur.fetchone()
+        cur.close()
+
+        return row
+
+    @staticmethod
+    def getMasterToken():
+        try:
+            conn = sqlite3.connect('cerberus.db')
+        except sqlite3.Error as e:
+            print(e)
+
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT  masterToken FROM cerberusParameters")
+        masterToken = cur.fetchone()
+        cur.close()
+
+        return masterToken[0]
+
 
     def searchService(self):
         try:
