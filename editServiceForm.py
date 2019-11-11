@@ -6,7 +6,6 @@ import mainForm
 
 
 def editServiceForm(self, service):
-    print(service)
     try:
         conn = sqlite3.connect('cerberus.db')
     except sqlite3.Error as e:
