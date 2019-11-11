@@ -50,9 +50,11 @@ class Cerberus:
         self.popup.add_command(label="Έξοδος", command=self.exitApp)
 
         self.search = StringVar()
+        self.searchEntry = Entry(master, textvariable=self.search)
+        self.searchEntry.insert(0, 'Αναζήτηση Υπηρεσίας')
+        self.searchEntry['fg'] = 'grey'
         self.search.trace("w", lambda name, index, mode, sv=self.search: self.searchService())
-        searchEntry = Entry(master, textvariable=self.search)
-        searchEntry.pack(pady=5, padx=20, fill=X)
+        self.searchEntry.pack(pady=5, padx=20, fill=X)
 
         # Fix BUG with Treeview colors in Python3.7
         def fixed_map(option):
@@ -102,10 +104,23 @@ class Cerberus:
         self.table.bind("<ButtonRelease-1>", self.openURLService)
         self.table.bind("<Motion>", self.changePointerOnHover)
         self.table.bind("<Button-3>", self.popupMenu)
+        self.searchEntry.bind("<FocusIn>", self.foc_in)
+        self.searchEntry.bind("<FocusOut>", self.foc_out)
 
         self.loadTable(self)
 
         self.master.bind("<Escape>", self.exitApp)
+
+    def foc_in(self, *args):
+        if self.search.get() == 'Αναζήτηση Υπηρεσίας':
+            self.searchEntry.delete('0', 'end')
+            self.searchEntry['fg'] = 'black'
+
+    def foc_out(self, *args):
+        if not self.search.get():
+            self.searchEntry.insert(0, 'Αναζήτηση Υπηρεσίας')
+            self.searchEntry['fg'] = 'grey'
+            self.loadTable(self)
 
     def changePointerOnHover(self, event):
         _iid = self.table.identify_row(event.y)
@@ -178,7 +193,6 @@ class Cerberus:
 
         return masterToken[0]
 
-
     def searchService(self):
         try:
             conn = sqlite3.connect('cerberus.db')
@@ -186,7 +200,10 @@ class Cerberus:
             print(e)
 
         cur = conn.cursor()
-        if self.search.get() != '':
+
+        if self.search.get() == 'Αναζήτηση Υπηρεσίας':
+            pass
+        elif self.search.get():
             cur.execute(
                 "SELECT name, email, username, password, value, category, url FROM service WHERE name LIKE '%" + self.search.get() + "%' or name LIKE '%" + self.search.get().upper() + "%'")  # ('%'+self.search.get()+'%',),'Α')
         elif not self.search.get():
@@ -319,6 +336,7 @@ class Cerberus:
 
 if __name__ == "__main__":
     import platform
+
     print(platform.system())
     root = Tk()
     App = Cerberus(root)
