@@ -51,12 +51,31 @@ class Cerberus:
         self.popup.add_separator()
         self.popup.add_command(label="Έξοδος", command=self.exitApp)
 
+        self.frame = Frame(background="white", borderwidth=1, relief="sunken",
+                           highlightthickness=1)
+        self.frame.pack(side="top", fill="x", padx=4, pady=4)
+
+        cancelImageData = '''
+                iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQA
+                AAD4SURBVDhPtZK9TsMwFIUzsLAVxF51Dh1SBpZKDKAYFNshW9nasR1AQmKhZeBn6dL36QPxBjwAn6WjDHWJsASfdBWdc32Pb6Jk/0pd1/1Qkr+n
+                qqoL59wbw4+hrLUvPMdqd8OgoVYMHMsKgTd4a+pK1n442OO2D8mW4DN8Tu+1LMsj2THe+0sO3UlGhF7nFjTJ8E4yggDLNreSMbz3KSEPkhGE39Mf
+                Su6HS545eCbZws0jekvJn9EHeydkFjZqmiZncIr31PkBd2HomuEFIfMQSE3USoetBgR8GWNOZKXDRltqI5kOG4Qf6ZM6lJUOr5IXRXEg+Rdk2Tea
+                80eK5t/XLAAAAABJRU5ErkJggg==
+                '''
         self.search = StringVar()
-        self.searchEntry = Entry(master, textvariable=self.search)
+
+        self.searchEntry = Entry(self.frame, textvariable=self.search, borderwidth=0, highlightthickness=0,
+                                 background="white")
         self.searchEntry.insert(0, 'Αναζήτηση Υπηρεσίας')
         self.searchEntry['fg'] = 'grey'
         self.search.trace("w", lambda name, index, mode, sv=self.search: self.searchService())
-        self.searchEntry.pack(pady=5, padx=20, fill=X)
+
+        self.searchEntry.image = PhotoImage(data=cancelImageData)
+        imageLabel = Label(self.frame, image=self.searchEntry.image)
+        imageLabel.pack(side="left")
+        imageLabel['bg'] = 'white'
+
+        self.searchEntry.pack(side="left", fill="both", expand=True)
 
         # Fix BUG with Treeview colors in Python3.7
         def fixed_map(option):
@@ -370,7 +389,7 @@ class Cerberus:
                                             title="Επιλογή Αρχείου",
                                             filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
 
-        with open(filePath, 'ab') as csvFile:
+        with open(filePath, 'w') as csvFile:
             csvFile = csv.writer(csvFile)
             csvFile.writerows(csvData)
 
