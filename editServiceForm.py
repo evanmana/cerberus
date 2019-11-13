@@ -71,11 +71,13 @@ def editServiceForm(self, service):
         onDestory()
 
     master = Toplevel()
-    windowWidth = master.winfo_reqwidth()
-    windowHeight = master.winfo_reqheight()
-    positionRight = int(master.winfo_screenwidth() / 2 - windowWidth / 2)
-    positionDown = int(master.winfo_screenheight() / 5 - windowHeight / 5)
-    master.geometry("+{}+{}".format(positionRight, positionDown))
+    windowWidth = 385
+    windowHeight = 280
+    screenWidth = master.winfo_screenwidth()
+    screenHeight = master.winfo_screenheight()
+    positionRight = int(screenWidth / 2 - windowWidth / 2)
+    positionDown = int(screenHeight / 3 - windowHeight / 2)
+    master.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
     master.lift()
     master.focus_force()
     master.grab_set()
