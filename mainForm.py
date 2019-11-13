@@ -17,11 +17,13 @@ class Cerberus:
 
         self.master = master
         self.master.title('Cerberus {}'.format(self.versionApp))
-        windowWidth = self.master.winfo_reqwidth()
-        windowHeight = self.master.winfo_reqheight()
-        positionRight = int(self.master.winfo_screenwidth() / 3 - windowWidth / 3)
-        positionDown = int(self.master.winfo_screenheight() / 5 - windowHeight / 5)
-        self.master.geometry("1060x450+{}+{}".format(positionRight, positionDown))
+        windowWidth = 1060
+        windowHeight = 450
+        screenWidth = self.master.winfo_screenwidth()
+        screenHeight = self.master.winfo_screenheight()
+        positionRight = int(screenWidth / 2 - windowWidth / 2)
+        positionDown = int(screenHeight / 3 - windowHeight / 2)
+        self.master.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
 
         self.master.resizable(0, 0)
 
