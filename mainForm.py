@@ -367,8 +367,7 @@ class Cerberus:
 
         rows = cur.fetchall()
 
-
-        csvData = [['Κατηγορία', 'Υπηρεσία', 'Email', 'Όνομα Χρήστη', 'Κωδικός', 'ID', 'URL',]]
+        csvData = [['Κατηγορία', 'Υπηρεσία', 'Email', 'Όνομα Χρήστη', 'Κωδικός', 'ID', 'URL', ]]
 
         for row in rows:
             print(row[0])
@@ -386,14 +385,28 @@ class Cerberus:
                                   self.cipher_suite.decrypt(row[5]).decode("utf-8"),
                                   row[6]
                                   ]]
-        filePath = filedialog.asksaveasfile(initialdir="~",
-                                            initialfile= 'cerberus',
-                                            title="Επιλογή Αρχείου",
-                                            filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
 
-        with open(filePath, 'w') as csvFile:
-            csvFile = csv.writer(csvFile)
-            csvFile.writerows(csvData)
+        try:
+            filePath = filedialog.asksaveasfile(initialdir="~",
+                                                initialfile='cerberus.csv',
+                                                title="Επιλογή Αρχείου",
+                                                filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
+            if filePath.name:
+                try:
+                    with open(filePath.name, 'w') as csvFile:
+                        csvFile = csv.writer(csvFile, delimiter='\t')
+                        csvFile.writerows(csvData)
+                    messagebox.showinfo("Μήνυμα Σφάλματος",
+                                        "Το αρχείο αποθηκέυτηκε με Επιτυχία στην τοποθεσία {}.".format(filePath.name))
+                except Exception as e:
+                    messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
+                finally:
+                    csvFile.close()
+        except Exception as e:
+            print(e)
+            messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
+
+
 
 
 if __name__ == "__main__":
