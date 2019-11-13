@@ -371,13 +371,6 @@ class Cerberus:
         csvData = [['Κατηγορία', 'Υπηρεσία', 'Email', 'Όνομα Χρήστη', 'Κωδικός', 'ID', 'URL', ]]
 
         for row in rows:
-            print(row[0])
-            print(row[1])
-            print(self.cipher_suite.decrypt(row[2]).decode("utf-8"))
-            print(self.cipher_suite.decrypt(row[3]).decode("utf-8"))
-            print(self.cipher_suite.decrypt(row[4]).decode("utf-8"))
-            print(self.cipher_suite.decrypt(row[5]).decode("utf-8"))
-            print(row[6])
             csvData = csvData + [[row[0],
                                   row[1],
                                   self.cipher_suite.decrypt(row[2]).decode("utf-8"),
