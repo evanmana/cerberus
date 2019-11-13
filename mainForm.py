@@ -1,3 +1,4 @@
+from pathlib import Path
 from tkinter import *
 from tkinter.ttk import Treeview
 from tkinter import ttk
@@ -387,11 +388,12 @@ class Cerberus:
                                   ]]
 
         try:
-            filePath = filedialog.asksaveasfile(initialdir="~",
+            homeFolder = str(Path.home())
+            filePath = filedialog.asksaveasfile(initialdir=homeFolder,
                                                 initialfile='cerberus.csv',
                                                 title="Επιλογή Αρχείου",
                                                 filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
-            if filePath.name:
+            if filePath:
                 try:
                     with open(filePath.name, 'w') as csvFile:
                         csvFile = csv.writer(csvFile, delimiter='\t')
@@ -400,13 +402,9 @@ class Cerberus:
                                         "Το αρχείο αποθηκέυτηκε με Επιτυχία στην τοποθεσία {}.".format(filePath.name))
                 except Exception as e:
                     messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
-                finally:
-                    csvFile.close()
         except Exception as e:
             print(e)
             messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
-
-
 
 
 if __name__ == "__main__":
