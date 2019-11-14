@@ -87,6 +87,8 @@ def addNewServiceForm(self):
     master.grab_set()
 
     master.title('Εισαγωγή Νέας Υπηρεσίας')
+    img = PhotoImage(data=self.getAppIcon())
+    master.wm_iconphoto(True, img)
     master.resizable(0, 0)
 
     Label(master, text="Κατηγορία:").grid(row=0, sticky="W", padx=5, pady=5)
