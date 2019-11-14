@@ -11,6 +11,25 @@ import csv
 
 
 class Cerberus:
+    def getAppIcon(self):
+        appIcon = """
+                iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADXSURB
+                VDhPrdJNDsFQFIbhEiSY+R34mYhNiD2IJYglkLAEAyEGxA6YifXYhBgxEN6vjqSR9LZNfMkT5xzt7c1tvYhkTeLksMUdD+xsFju64YUjDlbvESsF6Iaz331y
+                gmZFv4uRC8af0s8ImkUmgwm03TUWZmWzKZyHWoO26lJHaKq4Qhfq9PvoWa3ZDXpIaH4X6KJjdeIFZIhBoI9c4PcMniY4c56B3sIMS7Mx334O51tIoQTtpGK/
+                wVr/OZNGE220UDaqNWtAD3FGn7IEP1vVmuX97n/xvDdpfjuRn6jN2AAAAABJRU5ErkJggg==
+                """
+        return appIcon
+
+    def getSearchIcon(self):
+        searchIcon = '''
+                        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQA
+                        AAD4SURBVDhPtZK9TsMwFIUzsLAVxF51Dh1SBpZKDKAYFNshW9nasR1AQmKhZeBn6dL36QPxBjwAn6WjDHWJsASfdBWdc32Pb6Jk/0pd1/1Qkr+n
+                        qqoL59wbw4+hrLUvPMdqd8OgoVYMHMsKgTd4a+pK1n442OO2D8mW4DN8Tu+1LMsj2THe+0sO3UlGhF7nFjTJ8E4yggDLNreSMbz3KSEPkhGE39Mf
+                        Su6HS545eCbZws0jekvJn9EHeydkFjZqmiZncIr31PkBd2HomuEFIfMQSE3USoetBgR8GWNOZKXDRltqI5kOG4Qf6ZM6lJUOr5IXRXEg+Rdk2Tea
+                        80eK5t/XLAAAAABJRU5ErkJggg==
+                        '''
+        return searchIcon
+
     def __init__(self, master):
         self.versionApp, self.key = self.initApp()
 
@@ -25,6 +44,9 @@ class Cerberus:
         positionRight = int(screenWidth / 2 - windowWidth / 2)
         positionDown = int(screenHeight / 3 - windowHeight / 2)
         self.master.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+
+        img = PhotoImage(data=self.getAppIcon())
+        root.wm_iconphoto(True, img)
 
         self.master.resizable(0, 0)
 
@@ -58,13 +80,6 @@ class Cerberus:
                            highlightthickness=1)
         self.frame.pack(side="top", fill="x", padx=4, pady=4)
 
-        cancelImageData = '''
-                iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQA
-                AAD4SURBVDhPtZK9TsMwFIUzsLAVxF51Dh1SBpZKDKAYFNshW9nasR1AQmKhZeBn6dL36QPxBjwAn6WjDHWJsASfdBWdc32Pb6Jk/0pd1/1Qkr+n
-                qqoL59wbw4+hrLUvPMdqd8OgoVYMHMsKgTd4a+pK1n442OO2D8mW4DN8Tu+1LMsj2THe+0sO3UlGhF7nFjTJ8E4yggDLNreSMbz3KSEPkhGE39Mf
-                Su6HS545eCbZws0jekvJn9EHeydkFjZqmiZncIr31PkBd2HomuEFIfMQSE3USoetBgR8GWNOZKXDRltqI5kOG4Qf6ZM6lJUOr5IXRXEg+Rdk2Tea
-                80eK5t/XLAAAAABJRU5ErkJggg==
-                '''
         self.search = StringVar()
 
         self.searchEntry = Entry(self.frame, textvariable=self.search, borderwidth=0, highlightthickness=0,
@@ -73,7 +88,7 @@ class Cerberus:
         self.searchEntry['fg'] = 'grey'
         self.search.trace("w", lambda name, index, mode, sv=self.search: self.searchService())
 
-        self.searchEntry.image = PhotoImage(data=cancelImageData)
+        self.searchEntry.image = PhotoImage(data=self.getSearchIcon())
         imageLabel = Label(self.frame, image=self.searchEntry.image)
         imageLabel.pack(side="left")
         imageLabel['bg'] = 'white'
