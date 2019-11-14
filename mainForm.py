@@ -11,7 +11,8 @@ import csv
 
 
 class Cerberus:
-    def getAppIcon(self):
+    @staticmethod
+    def getAppIcon():
         appIcon = """
                 iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADXSURB
                 VDhPrdJNDsFQFIbhEiSY+R34mYhNiD2IJYglkLAEAyEGxA6YifXYhBgxEN6vjqSR9LZNfMkT5xzt7c1tvYhkTeLksMUdD+xsFju64YUjDlbvESsF6Iaz331y
@@ -20,7 +21,8 @@ class Cerberus:
                 """
         return appIcon
 
-    def getSearchIcon(self):
+    @staticmethod
+    def getSearchIcon():
         searchIcon = '''
                         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQA
                         AAD4SURBVDhPtZK9TsMwFIUzsLAVxF51Dh1SBpZKDKAYFNshW9nasR1AQmKhZeBn6dL36QPxBjwAn6WjDHWJsASfdBWdc32Pb6Jk/0pd1/1Qkr+n
@@ -417,8 +419,61 @@ class Cerberus:
 
 if __name__ == "__main__":
     import platform
-
     print(platform.system())
+
+
+    def check_password(failures=[]):
+        try:
+            conn = sqlite3.connect('cerberus.db')
+        except sqlite3.Error as e:
+            print(e)
+
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT masterToken FROM cerberusParameters")
+        row = cur.fetchone()
+        cur.close()
+
+        if entry.get() == row[0]:
+            root.destroy()
+            print('Logged in')
+            return
+        failures.append(1)
+        if sum(failures) >= 3:
+            root.destroy()
+            raise SystemExit('Unauthorized login attempt')
+        else:
+            entry.delete(0, 'end')
+            root.title('Λάθος Κωδικός, παρακαλώ δοκιμάστε ξανά. Προσπάθεια %i/%i' % (sum(failures) + 1, 3))
+
+
+    root = Tk()
+    root.geometry('720x150')
+    root.title('Εισαγωγή Κωδικού')
+
+    parent = Frame(root, padx=10, pady=10)
+    parent.pack(fill=BOTH, expand=True)
+
+    Label(parent, text="Παρακαλώ εισάγεται τον Κωδικό σας:").pack(side=TOP)
+    entry = Entry(parent, show="*", )
+    entry.pack(side=TOP, pady=(0, 15), fill=BOTH)
+
+    b = Button(parent, borderwidth=1, text="Είσοδος", width=10, pady=8, command=check_password)
+    b.pack(pady="7")
+
+    label = Label(parent, text='Ξεχάσατε τον Κωδικό σας?', font=(None, 9), fg='blue')
+    label.pack()
+
+    label.bind("<Button-1>", lambda x: entry.delete(0, 'end'))
+    label.bind("<Motion>", label.config(cursor="hand2"))
+    entry.bind('<Return>', lambda x: check_password())
+    entry.focus_set()
+    root.resizable(0, 0)
+    root.mainloop()
+
     root = Tk()
     App = Cerberus(root)
     root.mainloop()
+
+
+
