@@ -83,6 +83,8 @@ def editServiceForm(self, service):
     master.grab_set()
 
     master.title('Επεξεργασία Υπηρεσίας: ' + service[0])
+    img = PhotoImage(data=self.getAppIcon())
+    master.wm_iconphoto(True, img)
     master.resizable(0, 0)
 
     Label(master, text="Κατηγορία:").grid(row=0, sticky="W", padx=5, pady=5)
