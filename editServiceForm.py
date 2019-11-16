@@ -134,4 +134,3 @@ def editServiceForm(self, service):
     master.bind("<Escape>", onDestory)
     master.bind("<Return>", editService)
     master.protocol("WM_DELETE_WINDOW", onDestory)
-    mainloop()
