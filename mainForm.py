@@ -32,6 +32,55 @@ class Cerberus:
                         '''
         return searchIcon
 
+    @staticmethod
+    def getAddIcon():
+        addIcon = '''
+                    iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAAOElEQVQokWNgoBJwgGIMwEQtDTgByRoYcTgBxj6AJHaAgYHhAMk24AINUIwBaO9pZjxyD6CYMgAA6/MG0do6pCsAAAAASUVORK5CYII=
+                    '''
+        return addIcon
+
+    @staticmethod
+    def getEditIcon():
+        editIcon = '''
+                    iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAAXElEQVQokcXNoQ2AQBBE0ZeAowLqoRE6AYlDUAF90AVFUMZhViHuDkGYZLLmz18+yIylFu5wIsVQWzD3GHDEKAun6BafquCE6R94fMBzDn7as+YmbosLO9aS/VVuPnQeCUPPWjYAAAAASUVORK5CYII=
+                    '''
+        return editIcon
+
+    @staticmethod
+    def getDeleteIcon():
+        deleteIcon = '''
+                    iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAAoUlEQVQokb2OMQ6CUBBEZ792xuPA7+GfhCBBg17GQoKJJ+ECxuPgTyyQsTCEFX+r0+3szO4D/ibvbOGTOP/ykzj3zhbjbNSup6Du0minjmQU1AOGxejJ7EtGsiF4MGIeJBsK9+v2dgoWptJwhgAEKh2eI02Sdzqkj4JCqkTMRijHzkXbYNM7m93TuNeBkKc/LIUoNfOqvV6EKA3MMwz4C70A3ZVMHzoSQQYAAAAASUVORK5CYII=
+                    '''
+        return deleteIcon
+
+    @staticmethod
+    def getInfoIcon():
+        infoIcon = '''
+                   iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAARElEQVQokWNgoAJQYWBguAPFKuiSTFg0+DMwMChDsR+xNtxmYGC4BdVEffAfit+QowkDYPM0XkB7DYxYxNDdjk0N8QAA5qgK0QnW7YsAAAAASUVORK5CYII=
+                    '''
+        return infoIcon
+
+    @staticmethod
+    def getExcelIcon():
+        excelIcon = '''
+                    iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAABK0lEQVQokZWRzUoCYRSGn+8bhcaigSgHjLDctLAfaycULdsU0RXUtpuIghZdQRfQBURBqzYtIoIgs3TaBGqGxczYQmgGQfRrUQ1jBeG7fM95zjmcF3qU+Gmkd7JDWqc5JzrCuNvLHf0JzG7PLysltkBlgCSAFtUeEjOJw6BRifPT9ePrCICCLKi18KSBWP+YqZv7ZiyO1/IoNcq7wCcAMD6cZDWzQr6aR4/q3NsFzYzFmR6ewvYdSo0yAPIbqNSfSI2k2FzY4OLxkj5N1+JfQMqYCDbL0BVoUhKREaTosrsUnJQeTXNTyVF9e2ZpcpHcy23b8R0K9SK27/wGrJqFVbOCgmEMtm3fgXoRr+V1AwKuFOIk/Nb3pvfqeu6B67kAKKnOghzC+i+4nvUBGuFnrHFS+BMAAAAASUVORK5CYII=
+                     '''
+        return excelIcon
+
+    @staticmethod
+    def getExitIcon():
+        exitIcon = '''
+                    iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAArElEQVQokZXRsWpCQRCF4S96A1fQwpR5Fe0E7Wyt0ljapAxok8rKUmx9DQvtfIe8QkCwsggoIc1c0ORuLh447MDOP3OW5U49xPmEMeqJvgvWOBYNrxjigEaJB2hhnwWQY4v3X5OfY8gsemT+1zSgD5xTQBedqD/xgj4WKSBHO+rH8HdxWQZsw7DEJiKBWsUb5hgV+a83fKGHtwTYwY7bj5ugmQBOWOFYkeivfgCGpRoLVq8K4wAAAABJRU5ErkJggg==
+                     '''
+        return exitIcon
+
+    @staticmethod
+    def getSettingscon():
+        settingsIcon = '''
+                    iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAAdUlEQVQoka3RTQqCABQE4I8O0An0HIG30OyKeYJ05cVEqM0rXoKl4MBshpn3ywGoMAerX8YaF4x4BsfQ6qX5lkxrbOEUgSaFHyhQYkj6NXc4Y4pKRdLL0KbwfDrsRpdm7RcjvfV7DrT+L/21AzvPmrH5cZvwAiTzLK0qoOjqAAAAAElFTkSuQmCC
+                     '''
+        return settingsIcon
+
     def __init__(self, master, root):
         self.versionApp, self.key = self.initApp()
 
@@ -45,10 +94,11 @@ class Cerberus:
         self.screenHeight = self.master.winfo_screenheight()
         self.positionRight = int(self.screenWidth / 2 - self.windowWidth / 2)
         self.positionDown = int(self.screenHeight / 3 - self.windowHeight / 2)
-        self.master.geometry("{}x{}+{}+{}".format(self.windowWidth, self.windowHeight, self.positionRight, self.positionDown))
+        self.master.geometry(
+            "{}x{}+{}+{}".format(self.windowWidth, self.windowHeight, self.positionRight, self.positionDown))
 
-        img = PhotoImage(data=self.getAppIcon())
-        self.master.wm_iconphoto(True, img)
+        self.img = PhotoImage(data=self.getAppIcon())
+        self.master.wm_iconphoto(True, self.img)
 
         self.master.resizable(0, 0)
 
@@ -56,29 +106,39 @@ class Cerberus:
         filemenu = Menu(self.menubar, tearoff=0)
 
         self.menubar.add_cascade(label="Cerberus", menu=filemenu)
-        filemenu.add_command(label="Εισαγωγή Υπηρεσίας", command=self.getAddNewServiceForm)
-        filemenu.add_command(label="Επεξεργασία Υπηρεσίας", command=self.getEditServiceForm)
-        filemenu.add_command(label="Διαγραφή Υπηρεσίας", command=self.deleteService)
+        self.addIcon = PhotoImage(data=self.getAddIcon())
+        filemenu.add_command(label="Εισαγωγή Υπηρεσίας", image=self.addIcon, compound='left',
+                             command=self.getAddNewServiceForm)
+        self.editIcon = PhotoImage(data=self.getEditIcon())
+        filemenu.add_command(label="Επεξεργασία Υπηρεσίας", image=self.editIcon, compound='left',
+                             command=self.getEditServiceForm)
+        self.deleteIcon = PhotoImage(data=self.getDeleteIcon())
+        filemenu.add_command(label="Διαγραφή Υπηρεσίας", image=self.deleteIcon, compound='left',
+                             command=self.deleteService)
         filemenu.add_separator()
-        filemenu.add_command(label="Εξαγωγή σε Excel", command=self.exportToCSV)
+        self.excelIcon = PhotoImage(data=self.getExcelIcon())
+        filemenu.add_command(label="Εξαγωγή σε Excel", image=self.excelIcon, compound='left', command=self.exportToCSV)
         filemenu.add_separator()
-        filemenu.add_command(label="Έξοδος", command=self.exitApp)
+        self.exitIcon = PhotoImage(data=self.getExitIcon())
+        filemenu.add_command(label="Έξοδος", image=self.exitIcon, compound='left', command=self.exitApp)
 
         settingsMenu = Menu(self.menubar, tearoff=0)
         self.menubar.add_cascade(label="Ρυθμίσεις", menu=settingsMenu)
+        self.settingsIcon = PhotoImage(data=self.getSettingscon())
+        settingsMenu.add_command(label="Αλλαγή κωδικού", image=self.settingsIcon, compound='left')
 
         aboutMenu = Menu(self.menubar, tearoff=0)
         self.menubar.add_cascade(label="Βοήθεια", menu=aboutMenu)
-        aboutMenu.add_command(label="Αναφορά Προβλήματος")
-        aboutMenu.add_command(label="Περί", command=getAboutAppForm)
+        self.infoIcon = PhotoImage(data=self.getInfoIcon())
+        aboutMenu.add_command(label="Περί", image=self.infoIcon, compound='left', command=self.getAboutAppForm)
 
         self.master.config(menu=self.menubar)
 
         self.popup = Menu(root, tearoff=0)
-        self.popup.add_command(label="Επεξεργασία Υπηρεσίας", command=self.getEditServiceForm)
-        self.popup.add_command(label="Διαγραφή Υπηρεσίας", command=self.deleteService)
+        self.popup.add_command(label="Επεξεργασία Υπηρεσίας", image=self.editIcon, compound='left', command=self.getEditServiceForm)
+        self.popup.add_command(label="Διαγραφή Υπηρεσίας", image=self.deleteIcon, compound='left', command=self.deleteService)
         self.popup.add_separator()
-        self.popup.add_command(label="Έξοδος", command=self.exitApp)
+        self.popup.add_command(label="Έξοδος", image=self.exitIcon, compound='left', command=self.exitApp)
 
         self.frame = Frame(self.master, background="white", borderwidth=1, relief="sunken",
                            highlightthickness=1)
@@ -314,7 +374,7 @@ class Cerberus:
             tree.move(item[1], '', ix)
         # switch the heading so that it will sort in the opposite direction
         tree.heading(col,
-                     command=lambda col=col: self.sortby(tree, col, int(not descending)))
+                     command=lambda x=col: self.sortby(tree, col, int(not descending)))
 
     @staticmethod
     def loadTable(self):
@@ -391,40 +451,49 @@ class Cerberus:
             print(e)
 
         cur = conn.cursor()
-        cur.execute("SELECT category, name, email, username, password, value, url value FROM service")
+        cur.execute("SELECT masterToken FROM cerberusParameters")
+        masterToken = cur.fetchone()
 
-        rows = cur.fetchall()
+        # TODO
+        passwd = 'YUaMl3PfzNvyJLzlbPzVCb78wcobfLjhcXgACw9rvkk='
 
-        csvData = [['Κατηγορία', 'Υπηρεσία', 'Email', 'Όνομα Χρήστη', 'Κωδικός', 'ID', 'URL', ]]
+        if masterToken[0] == passwd:
+            cur = conn.cursor()
+            cur.execute("SELECT category, name, email, username, password, value, url value FROM service")
 
-        for row in rows:
-            csvData = csvData + [[row[0],
-                                  row[1],
-                                  self.cipher_suite.decrypt(row[2]).decode("utf-8"),
-                                  self.cipher_suite.decrypt(row[3]).decode("utf-8"),
-                                  self.cipher_suite.decrypt(row[4]).decode("utf-8"),
-                                  self.cipher_suite.decrypt(row[5]).decode("utf-8"),
-                                  row[6]
-                                  ]]
+            rows = cur.fetchall()
 
-        try:
-            homeFolder = str(Path.home())
-            filePath = filedialog.asksaveasfile(initialdir=homeFolder,
-                                                initialfile='cerberus.csv',
-                                                title="Επιλογή Αρχείου",
-                                                filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
-            if filePath:
-                try:
-                    with open(filePath.name, 'w') as csvFile:
-                        csvFile = csv.writer(csvFile, delimiter='\t')
-                        csvFile.writerows(csvData)
-                    messagebox.showinfo("Μήνυμα Σφάλματος",
-                                        "Το αρχείο αποθηκέυτηκε με Επιτυχία στην τοποθεσία {}.".format(filePath.name))
-                except Exception as e:
-                    messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
-        except Exception as e:
-            print(e)
-            messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
+            csvData = [['Κατηγορία', 'Υπηρεσία', 'Email', 'Όνομα Χρήστη', 'Κωδικός', 'ID', 'URL', ]]
+
+            for row in rows:
+                csvData = csvData + [[row[0],
+                                      row[1],
+                                      self.cipher_suite.decrypt(row[2]).decode("utf-8"),
+                                      self.cipher_suite.decrypt(row[3]).decode("utf-8"),
+                                      self.cipher_suite.decrypt(row[4]).decode("utf-8"),
+                                      self.cipher_suite.decrypt(row[5]).decode("utf-8"),
+                                      row[6]
+                                      ]]
+
+            try:
+                homeFolder = str(Path.home())
+                filePath = filedialog.asksaveasfile(initialdir=homeFolder,
+                                                    initialfile='cerberus.csv',
+                                                    title="Επιλογή Αρχείου",
+                                                    filetypes=(("csv files", "*.csv"), ("all files", "*.*")))
+                if filePath:
+                    try:
+                        with open(filePath.name, 'w') as csvFile:
+                            csvFile = csv.writer(csvFile, delimiter='\t')
+                            csvFile.writerows(csvData)
+                        messagebox.showinfo("Μήνυμα Επιτυχίας",
+                                            "Το αρχείο αποθηκέυτηκε με Επιτυχία στην τοποθεσία {}.".format(
+                                                filePath.name))
+                    except Exception as e:
+                        messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
+            except Exception as e:
+                print(e)
+                messagebox.showerror("Μήνυμα Σφάλματος", "Δεν ήταν δυνατή η Εξαγωγή του αρχείου.")
 
 
 if __name__ == "__main__":
@@ -459,8 +528,15 @@ if __name__ == "__main__":
             entry.delete(0, 'end')
             root.title('Λάθος Κωδικός, παρακαλώ δοκιμάστε ξανά. Προσπάθεια %i/%i' % (sum(failures) + 1, 3))
 
+
     def exitApp():
         root.destroy()
+
+
+    def sendPasswdToEmail():
+        import sendEmail
+        print("asda")
+        sendEmail.sendEmail()
 
     root = Tk()
     windowWidth = 720
@@ -486,11 +562,11 @@ if __name__ == "__main__":
     b = Button(parent, borderwidth=1, text="Είσοδος", width=10, pady=8, command=check_password)
     b.pack(pady="7")
 
-    label = Label(parent, text='Ξεχάσατε τον Κωδικό σας?', font=(None, 9), fg='blue')
-    label.pack()
+    forgotPasswdLbl = Label(parent, text='Ξεχάσατε τον Κωδικό σας?', font=(None, 8), fg='blue')
+    forgotPasswdLbl.pack()
 
-    label.bind("<Button-1>", lambda x: entry.delete(0, 'end'))
-    label.bind("<Motion>", label.config(cursor="hand2"))
+    forgotPasswdLbl.bind("<Button-1>", lambda x: sendPasswdToEmail())
+    forgotPasswdLbl.bind("<Motion>", forgotPasswdLbl.config(cursor="hand2"))
     entry.bind('<Return>', lambda x: check_password())
     root.bind("<Escape>", lambda x: exitApp())
     entry.focus_set()
