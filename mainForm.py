@@ -32,23 +32,23 @@ class Cerberus:
                         '''
         return searchIcon
 
-    def __init__(self, master):
+    def __init__(self, master, root):
         self.versionApp, self.key = self.initApp()
 
         self.cipher_suite = Fernet(self.key)
 
         self.master = master
         self.master.title('Cerberus {}'.format(self.versionApp))
-        windowWidth = 1060
-        windowHeight = 450
-        screenWidth = self.master.winfo_screenwidth()
-        screenHeight = self.master.winfo_screenheight()
-        positionRight = int(screenWidth / 2 - windowWidth / 2)
-        positionDown = int(screenHeight / 3 - windowHeight / 2)
-        self.master.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+        self.windowWidth = 1060
+        self.windowHeight = 450
+        self.screenWidth = self.master.winfo_screenwidth()
+        self.screenHeight = self.master.winfo_screenheight()
+        self.positionRight = int(self.screenWidth / 2 - self.windowWidth / 2)
+        self.positionDown = int(self.screenHeight / 3 - self.windowHeight / 2)
+        self.master.geometry("{}x{}+{}+{}".format(self.windowWidth, self.windowHeight, self.positionRight, self.positionDown))
 
         img = PhotoImage(data=self.getAppIcon())
-        root.wm_iconphoto(True, img)
+        self.master.wm_iconphoto(True, img)
 
         self.master.resizable(0, 0)
 
@@ -68,7 +68,9 @@ class Cerberus:
         self.menubar.add_cascade(label="Ρυθμίσεις", menu=settingsMenu)
 
         aboutMenu = Menu(self.menubar, tearoff=0)
-        self.menubar.add_cascade(label="Σχετικά", menu=aboutMenu)
+        self.menubar.add_cascade(label="Βοήθεια", menu=aboutMenu)
+        aboutMenu.add_command(label="Αναφορά Προβλήματος")
+        aboutMenu.add_command(label="Περί", command=getAboutAppForm)
 
         self.master.config(menu=self.menubar)
 
@@ -78,7 +80,7 @@ class Cerberus:
         self.popup.add_separator()
         self.popup.add_command(label="Έξοδος", command=self.exitApp)
 
-        self.frame = Frame(background="white", borderwidth=1, relief="sunken",
+        self.frame = Frame(self.master, background="white", borderwidth=1, relief="sunken",
                            highlightthickness=1)
         self.frame.pack(side="top", fill="x", padx=4, pady=4)
 
@@ -106,7 +108,7 @@ class Cerberus:
         style.map('Treeview', foreground=fixed_map('foreground'), background=fixed_map('background'))
         # Fix BUG with Treeview colors in Python3.7
 
-        self.table = Treeview()
+        self.table = Treeview(self.master)
         self.table['show'] = 'headings'
         self.table['columns'] = ('Services', 'email', 'username', 'passwd', 'id', 'category', 'url')
 
@@ -147,6 +149,7 @@ class Cerberus:
         self.table.bind("<Button-3>", self.popupMenu)
         self.searchEntry.bind("<FocusIn>", self.foc_in)
         self.searchEntry.bind("<FocusOut>", self.foc_out)
+        self.master.protocol("WM_DELETE_WINDOW", self.exitApp)
 
         self.loadTable(self)
 
@@ -274,8 +277,15 @@ class Cerberus:
                                       row[6]), tags=tag)
             i = i + 1
 
-    def exitApp(self, event=None):
-        self.master.destroy()
+    @staticmethod
+    def exitApp(event=None):
+        root.destroy()
+
+    @staticmethod
+    def getAboutAppForm():
+        print('asd')
+        import aboutApp
+        aboutApp.aboutApp()
 
     def getAddNewServiceForm(self):
         self.master.withdraw()
@@ -419,6 +429,7 @@ class Cerberus:
 
 if __name__ == "__main__":
     import platform
+
     print(platform.system())
 
 
@@ -433,11 +444,13 @@ if __name__ == "__main__":
             "SELECT masterToken FROM cerberusParameters")
         row = cur.fetchone()
         cur.close()
-
+        print(row[0])
         if entry.get() == row[0]:
-            root.destroy()
             print('Logged in')
-            return
+            root.withdraw()
+            master = Toplevel()
+            App = Cerberus(master, root)
+
         failures.append(1)
         if sum(failures) >= 3:
             root.destroy()
@@ -446,9 +459,21 @@ if __name__ == "__main__":
             entry.delete(0, 'end')
             root.title('Λάθος Κωδικός, παρακαλώ δοκιμάστε ξανά. Προσπάθεια %i/%i' % (sum(failures) + 1, 3))
 
+    def exitApp():
+        root.destroy()
 
     root = Tk()
-    root.geometry('720x150')
+    windowWidth = 720
+    windowHeight = 150
+    screenWidth = root.winfo_screenwidth()
+    screenHeight = root.winfo_screenheight()
+    positionRight = int(screenWidth / 2 - windowWidth / 2)
+    positionDown = int(screenHeight / 3 - windowHeight / 2)
+    root.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
+
+    img = PhotoImage(data=Cerberus.getAppIcon())
+    root.wm_iconphoto(True, img)
+
     root.title('Εισαγωγή Κωδικού')
 
     parent = Frame(root, padx=10, pady=10)
@@ -467,13 +492,7 @@ if __name__ == "__main__":
     label.bind("<Button-1>", lambda x: entry.delete(0, 'end'))
     label.bind("<Motion>", label.config(cursor="hand2"))
     entry.bind('<Return>', lambda x: check_password())
+    root.bind("<Escape>", lambda x: exitApp())
     entry.focus_set()
     root.resizable(0, 0)
     root.mainloop()
-
-    root = Tk()
-    App = Cerberus(root)
-    root.mainloop()
-
-
-
