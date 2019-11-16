@@ -132,4 +132,3 @@ def addNewServiceForm(self):
     master.bind("<Escape>", onDestory)
     master.bind("<Return>", insertNewService)
     master.protocol("WM_DELETE_WINDOW", onDestory)
-    mainloop()
