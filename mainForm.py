@@ -506,7 +506,6 @@ class Cerberus:
 
     @staticmethod
     def getAboutAppForm():
-        print('asd')
         import aboutApp
         aboutApp.aboutApp()
 
@@ -594,7 +593,6 @@ class Cerberus:
 
     def popupMenu(self, event):
         serviceId = self.table.identify_row(event.y)
-        print("ASDFGH")
         if serviceId:
             self.table.selection_set(serviceId)
             try:
@@ -694,7 +692,6 @@ if __name__ == "__main__":
 
     def sendPasswdToEmail():
         import sendEmail
-        print("asda")
         sendEmail.sendEmail()
 
 
