@@ -260,11 +260,13 @@ class Cerberus:
         self.copyIcon = PhotoImage(data=self.getCopyIcon())
         self.popup = Menu(root, tearoff=0)
         self.popup.add_command(label=" Αντιγραφή Email", image=self.copyIcon, compound='left',
-                              command=self.getEditServiceForm)
+                               command=self.copyEmail)
+        self.popup.add_command(label=" Αντιγραφή Username", image=self.copyIcon, compound='left',
+                               command=self.copyUsername)
         self.popup.add_command(label=" Αντιγραφή Κωδικού", image=self.copyIcon, compound='left',
-                              command=self.getEditServiceForm)
+                               command=self.copyPasswd)
         self.popup.add_command(label=" Αντιγραφή ID", image=self.copyIcon, compound='left',
-                              command=self.getEditServiceForm)
+                               command=self.copyID)
         self.popup.add_separator()
         self.popup.add_command(label=" Επεξεργασία Υπηρεσίας", image=self.editIcon, compound='left',
                                command=self.getEditServiceForm)
@@ -342,11 +344,15 @@ class Cerberus:
         self.table.bind("<Button-3>", self.popupMenu)
         self.searchEntry.bind("<FocusIn>", self.foc_in)
         self.searchEntry.bind("<FocusOut>", self.foc_out)
+        self.popup.bind("<FocusOut>",self.popupFocusOut)
         self.master.protocol("WM_DELETE_WINDOW", self.exitApp)
 
         self.loadTable(self)
 
         self.master.bind("<Escape>", self.exitApp)
+
+    def popupFocusOut(self, event=None):
+        self.popup.unpost()
 
     def foc_in(self, *args):
         if self.search.get() == 'Αναζήτηση Υπηρεσίας':
@@ -414,6 +420,30 @@ class Cerberus:
         cur.close()
 
         return row
+
+    def copyEmail(self):
+        for item in self.table.selection():
+            item_text = self.table.item(item, "values")
+            self.master.clipboard_clear()
+            root.clipboard_append(item_text[1])
+
+    def copyUsername(self):
+        for item in self.table.selection():
+            item_text = self.table.item(item, "values")
+            self.master.clipboard_clear()
+            root.clipboard_append(item_text[2])
+
+    def copyPasswd(self):
+        for item in self.table.selection():
+            item_text = self.table.item(item, "values")
+            self.master.clipboard_clear()
+            root.clipboard_append(item_text[3])
+
+    def copyID(self):
+        for item in self.table.selection():
+            item_text = self.table.item(item, "values")
+            self.master.clipboard_clear()
+            root.clipboard_append(item_text[4])
 
     @staticmethod
     def getMasterToken():
@@ -496,12 +526,7 @@ class Cerberus:
             editServiceForm.editServiceForm(self, service)
 
     def sortby(self, tree, col, descending):
-        """sort tree contents when a column header is clicked on"""
-        # grab values to sort
         data = [(tree.set(child, col), child) for child in tree.get_children('')]
-        # if the data to be sorted is numeric change to float
-
-        # now sort the data in place
         data.sort(reverse=descending)
         for ix, item in enumerate(data):
             tree.move(item[1], '', ix)
@@ -569,7 +594,7 @@ class Cerberus:
 
     def popupMenu(self, event):
         serviceId = self.table.identify_row(event.y)
-
+        print("ASDFGH")
         if serviceId:
             self.table.selection_set(serviceId)
             try:
@@ -635,7 +660,7 @@ if __name__ == "__main__":
     print(platform.system())
 
 
-    def check_password(failures=[]):
+    def check_password(failures=[1]):
         try:
             conn = sqlite3.connect('cerberus.db')
         except sqlite3.Error as e:
@@ -646,20 +671,21 @@ if __name__ == "__main__":
             "SELECT masterToken FROM cerberusParameters")
         row = cur.fetchone()
         cur.close()
-        print(row[0])
+
         if entry.get() == row[0]:
+            failures.clear()
             print('Logged in')
             root.withdraw()
             master = Toplevel()
             App = Cerberus(master, root)
 
         failures.append(1)
-        if sum(failures) >= 3:
+        if sum(failures) > 3:
             root.destroy()
             raise SystemExit('Unauthorized login attempt')
         else:
             entry.delete(0, 'end')
-            root.title('Λάθος Κωδικός, παρακαλώ δοκιμάστε ξανά. Προσπάθεια %i/%i' % (sum(failures) + 1, 3))
+            root.title('Λάθος Κωδικός, παρακαλώ δοκιμάστε ξανά. Προσπάθεια %i/%i' % (sum(failures), 3))
 
 
     def exitApp():
@@ -704,7 +730,7 @@ if __name__ == "__main__":
     entry.pack(side=TOP, pady=(0, 15))
 
     enterIcon = PhotoImage(data=Cerberus.getEnterIcon())
-    b = Button(parent, borderwidth=1, text="Είσοδος",image=enterIcon, compound=LEFT,  pady=8, command=check_password)
+    b = Button(parent, borderwidth=1, text="Είσοδος", image=enterIcon, compound=LEFT, pady=8, command=check_password)
     b.pack(pady="7")
 
     forgotPasswdLbl = Label(parent, text='Ξεχάσατε τον Κωδικό σας?', font=(None, 8), fg='blue')
@@ -717,3 +743,4 @@ if __name__ == "__main__":
     entry.focus_set()
     root.resizable(0, 0)
     root.mainloop()
+#YUaMl3PfzNvyJLzlbPzVCb78wcobfLjhcXgACw9rvkk=
