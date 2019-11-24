@@ -98,7 +98,7 @@ class Cerberus:
         return exitIcon
 
     @staticmethod
-    def getSettingscon():
+    def getSettingsIcon():
         settingsIcon = '''
                     iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABmJLR0QA/wD/AP+gvaeTAAAAdUlEQVQoka3RTQqCABQE4I8O0An0
                     HIG30OyKeYJ05cVEqM0rXoKl4MBshpn3ywGoMAerX8YaF4x4BsfQ6qX5lkxrbOEUgSaFHyhQYkj6NXc4Y4pKRdLL0KbwfDrsRpdm
@@ -240,6 +240,7 @@ class Cerberus:
                              command=self.deleteService)
         filemenu.add_separator()
         self.excelIcon = PhotoImage(data=self.getExcelIcon())
+        filemenu.add_command(label="Εισαγωγή από Excel", image=self.excelIcon, compound='left', command=self.exportToCSV)
         filemenu.add_command(label="Εξαγωγή σε Excel", image=self.excelIcon, compound='left', command=self.exportToCSV)
         filemenu.add_separator()
         self.exitIcon = PhotoImage(data=self.getExitIcon())
@@ -247,8 +248,8 @@ class Cerberus:
 
         settingsMenu = Menu(self.menubar, tearoff=0)
         self.menubar.add_cascade(label="Ρυθμίσεις", menu=settingsMenu)
-        self.settingsIcon = PhotoImage(data=self.getSettingscon())
-        settingsMenu.add_command(label="Επεξεργασία Στοιχείων", image=self.settingsIcon, compound='left')
+        self.settingsIcon = PhotoImage(data=self.getSettingsIcon())
+        settingsMenu.add_command(label="Επεξεργασία Στοιχείων", image=self.settingsIcon, compound='left',  command=self.getSettingsForm)
 
         aboutMenu = Menu(self.menubar, tearoff=0)
         self.menubar.add_cascade(label="Βοήθεια", menu=aboutMenu)
@@ -524,6 +525,10 @@ class Cerberus:
             import editServiceForm
             editServiceForm.editServiceForm(self, service)
 
+    def getSettingsForm(self):
+        import settingsForm
+        settingsForm.settingsForm()
+
     def sortby(self, tree, col, descending):
         data = [(tree.set(child, col), child) for child in tree.get_children('')]
         data.sort(reverse=descending)
@@ -717,20 +722,20 @@ if __name__ == "__main__":
     panel = Label(root, image=appIcon, bg='#1e1e2f').place(x=20, y=20)
     Label(welcomeFrame, text="Καλώς ορίσατε στον", font=("Comic Sans MS", 32), fg='white', bg='#1e1e2f').place(x=110,
                                                                                                                y=25)
-    Label(welcomeFrame, text="Cerberus", font=("Helvetica", 32), fg='#d9ddff', bg='#1e1e2f').place(x=380, y=68)
+    Label(welcomeFrame, text="Cerberus", font=("Helvetica", 32), fg='#d9ddff', bg='#1e1e2f').place(x=380, y=72)
 
     parent = Frame(root, bg='lightgrey')
     parent.pack(side="top", fill=BOTH, expand=True)
 
-    Label(parent, text="Παρακαλώ εισάγεται τον Κωδικό σας:").pack(pady=(25, 0), side=TOP)
+    Label(parent, text="Παρακαλώ εισάγεται τον Κωδικό σας:", bg='lightgrey').pack(pady=(25, 0), side=TOP)
     entry = Entry(parent, show="*", width=40)
     entry.pack(side=TOP, pady=(0, 15))
 
     enterIcon = PhotoImage(data=Cerberus.getEnterIcon())
-    b = Button(parent, borderwidth=1, text="Είσοδος", image=enterIcon, compound=LEFT, pady=8, command=check_password)
+    b = Button(parent, borderwidth=1, text="Είσοδος", image=enterIcon, compound=LEFT, pady=8, width=120, command=check_password)
     b.pack(pady="7")
 
-    forgotPasswdLbl = Label(parent, text='Ξεχάσατε τον Κωδικό σας?', font=(None, 8), fg='blue')
+    forgotPasswdLbl = Label(parent, text='Ξεχάσατε τον Κωδικό σας?', font=(None, 8), fg='blue', bg='lightgrey')
     forgotPasswdLbl.pack()
 
     forgotPasswdLbl.bind("<Button-1>", lambda x: sendPasswdToEmail())
