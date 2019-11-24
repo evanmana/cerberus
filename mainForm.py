@@ -680,7 +680,7 @@ if __name__ == "__main__":
             print('Logged in')
             root.withdraw()
             master = Toplevel()
-            App = Cerberus(master, root)
+            Cerberus(master, root)
 
         failures.append(1)
         if sum(failures) > 3:
