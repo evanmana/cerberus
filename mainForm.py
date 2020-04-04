@@ -533,7 +533,12 @@ class Cerberus:
         data = [(tree.set(child, col), child) for child in tree.get_children('')]
         data.sort(reverse=descending)
         for ix, item in enumerate(data):
+            if (ix % 2) == 0:
+                tag = "oddrow"
+            else:
+                tag = "evenrow"
             tree.move(item[1], '', ix)
+            tree.item(item[1], tags=tag)
         # switch the heading so that it will sort in the opposite direction
         tree.heading(col,
                      command=lambda x=col: self.sortby(tree, col, int(not descending)))
@@ -616,7 +621,7 @@ class Cerberus:
         masterToken = cur.fetchone()
 
         # TODO
-        passwd = 'YUaMl3PfzNvyJLzlbPzVCb78wcobfLjhcXgACw9rvkk='
+        passwd = 'UaMl3PfzNvyJLzlbPzVCb78wcobfLjhcXgACw9rvkk='
 
         if masterToken[0] == passwd:
             cur = conn.cursor()
