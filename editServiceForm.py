@@ -3,6 +3,13 @@ import sqlite3
 from tkinter.ttk import Combobox
 from cryptography.fernet import Fernet
 import mainForm
+import cerberusCryptography
+import icons
+import  categoriesList
+
+id = None
+key = cerberusCryptography.getMasterKey()
+cipher_suite = Fernet(key)
 
 
 def editServiceForm(self, service):
@@ -20,9 +27,6 @@ def editServiceForm(self, service):
         mainForm.Cerberus.loadTable(self)
 
     def editService(event=NONE):
-        key = mainForm.Cerberus.getMasterToken()
-        cipher_suite = Fernet(key)
-
         if eCategory.get() != '':
             category = eCategory.get()
         else:
@@ -62,10 +66,12 @@ def editServiceForm(self, service):
         username = cipher_suite.encrypt(bytes(username, encoding="UTF-8"))
         password = cipher_suite.encrypt(bytes(password, encoding="UTF-8"))
         value = cipher_suite.encrypt(bytes(value, encoding="UTF-8"))
+        category = cipher_suite.encrypt(bytes(category, encoding="UTF-8"))
+        serviceUrl = cipher_suite.encrypt(bytes(serviceUrl, encoding="UTF-8"))
 
         cursor = conn.cursor()
         cursor.execute('''Update service set name=?, email=?, username=?, password=?, value=?, category=?, url=?
-                  where name=?''', (service, email, username, password, value, category, serviceUrl, oldService))
+                  where id=?''', (service, email, username, password, value, category, serviceUrl, id))
         conn.commit()
         conn.close()
         onDestory()
@@ -82,8 +88,8 @@ def editServiceForm(self, service):
     master.focus_force()
     master.grab_set()
 
-    master.title('Επεξεργασία Υπηρεσίας: ' + service[0])
-    img = PhotoImage(data=self.getAppIcon())
+    master.title('Cerberus - Επεξεργασία Υπηρεσίας: ' + service[0])
+    img = PhotoImage(data=icons.getAppIcon())
     master.wm_iconphoto(True, img)
     master.resizable(0, 0)
 
@@ -95,15 +101,15 @@ def editServiceForm(self, service):
     Label(master, text="Password:").grid(row=5, sticky="W", padx=5, pady=5)
     Label(master, text="ID:").grid(row=6, sticky="W", padx=5, pady=5)
 
-    eCategory = Combobox(master, width=33,
-                         values=("Προσωπικά Στοιχεία", "Κοινωνική Δικτύωση", "Email", "Banking", "Άλλο"))
+    id = service[-1]
+    categories = categoriesList.getCategoriesList()
+    eCategory = Combobox(master, width=33, values=categories)
 
     eCategory.insert(0, service[5])
     eCategory.focus()
 
     eService = Entry(master, width=35)
     eService.insert(0, service[0])
-    oldService = service[0]
 
     eServiceUrl = Entry(master, width=35)
     eServiceUrl.insert(0, service[6])
@@ -132,5 +138,5 @@ def editServiceForm(self, service):
     enterButton.grid(row=7, column=0, columnspan=2, sticky="we", padx=5, pady=5)
 
     master.bind("<Escape>", onDestory)
-    master.bind("<Return>", editService)
+    master.bind("<Return>",  editService)
     master.protocol("WM_DELETE_WINDOW", onDestory)
