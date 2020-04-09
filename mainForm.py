@@ -221,7 +221,7 @@ class Cerberus:
     def getSelectedService(self, event):
         for item in self.table.selection():
             selectedRow = self.table.item(item, "value")
-        return selectedRow
+            return selectedRow
 
     def initApp(self):
         print("Initialize Cerberus App")
