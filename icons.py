@@ -161,22 +161,21 @@ def getEnterIcon():
 
 def getEmailIcon():
     emailIcon = '''
-                iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAAuUlEQVQ4ja3TMW4CMRCF4S+BLnU6
-                kCi5AlXOQJGtkTgBVwg9FadImZITINEhFFKm4ABoBQUVabwrF453o80vjWSPx09vxjIdeYjWUxToZeoveMN3lYiLd7ihzAi8YICP
-                1OEdrzm7eA9R89hwoZE2Ak8YtRFLtTDGPpGv6WcEZ1gHB4uEyBarzjOI+fcW4AsTPId99YRFWwG4hkjSeQbxXyhxwClTP8EG8yoR
-                /4VPDBtcHbHE+a9Of+UHPSodYxC2OlgAAAAASUVORK5CYII=
+                iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABmJLR0QA/wD/AP+gvaeTAAAA/UlEQVQoka3QL0vDcRAG8M/8M9BgUR
+                GDDGYRw4KgGEwaBrbZZcEiZoNlwWwVX4OvwCEYVJhxoGAwiEVkzSJDmIhh94OvPzaTT7q755577m7UYBQxhx6+hvT8wjqaeMYdnnCL6
+                l+iPbSxkatXQtwY5tTGVORrOMRm5OO4Qi0vbCZOWzHkANeoR72M+1RUjJsynGE74mVcJFwLJRjBNDoJOYFuxN3IM7xgIRO+YzYhe3FT
+                tk0x4Qr4hjF8hmMFD7jEUYjrWMI+PrCSv7Oq//LMaQen2MUMjnGCRQPQ0H95OVefx+QgQYparNLCOW7wiNV8Y2HIgFI4veFVPORf8AN
+                KHy70AdaDagAAAABJRU5ErkJggg==
                  '''
     return emailIcon
 
 
 def getPasswordIcon():
     passwordIcon = '''
-                iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABmJLR0QA/wD/AP+gvaeTAAABSUlEQVQokW3SP0vXURQG8E/f0LCC
-                H2EgouJS4Jhbg2CYSOHg7BDoIr2AhoaGQIR6BwYNooMW4phOhQ0SCupoRDgIFpHRIJlk6XAfxcSznHv+Pefe57n8b9fwBB+wgwN8
-                wxsMod45dg8/cIjPeIlnmMBW8qtoPz3Uhz/YwzAunAGtw9MMf8TVi6jhPRowgDk8xChuoxkjmMQl9OIXPA7SeNDHEm8H/XfiLtzM
-                eR2WEnSiLY1f0JgNX1PvCPBP7FZJ7AflTpqnw+p+QOB7/F9UFa5gN6htKW7GV2jFP4XxmiLZpyrItWzaycCN+Pu4nsE6DIbx18Li
-                oaJjiyLJAeYV/VZSX0ptFZehP4Vl5Wfcxbs09uAW3mINz3O7E3uV4YVsPWsVmk4njn9IA17ggcLkIjbytmZFwxk8OgcUdGNKYXVP
-                YXsTs4pUJ3YETbpZWdfB700AAAAASUVORK5CYII=
+                iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABmJLR0QA/wD/AP+gvaeTAAAA5ElEQVQokZ3Rr0qDYRQG8N/nJkzvwK
+                UZRas2YSDCTHa9DW9CsBlWDN6CwbBgMowlNQwMsvhZTSIIavjO8OX1lYkPnPKc85zn/OF3rEb8GesYYRoxQm+RaAUPGCTcQXCdtLCV
+                CQ9R4TzhnrAVtY9zcikTbuC+MMkdNlOiShqcheMb6kzYjVGvcIKPdiR2ouN+wS3FENuYzIWdcJlpXvCK5ci9J1ytOeCPHY/xojn/dUQ
+                vuKO0sJ0JxziNzhf4xHNw49IqfVwu2E/U9Pm+ahe3uAmXEirsYRd1lSTWZL8qYKoZ/f/4As90Kcf5M3zwAAAAAElFTkSuQmCC
                  '''
     return passwordIcon
 
@@ -189,3 +188,18 @@ def getCopyIcon():
                  7Er3KWCjhBcJux4iAfUY0NRWPELTqPDL5RjuH3cYw2lRLOD8SLDW+QIx8L1U3zibA4B6SwnqfCn4AAAAABJRU5ErkJggg==
                   '''
     return copyIcon
+
+
+def getSaveIcon():
+    saveIcon = '''
+                 iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAApUlEQVQ4jc3SsQ3CMBQE0AeioGUeqB
+                 At80CZdGEFtmABGgIdk1AwAAUUuPhYSQiigJO+fD5/nc7+5tcYBD7D9E3/AacoDANfYIkJqrRGXmGHeZt7kQruQa+CNsclpQWjjrir
+                 tF4D32Ob0tZdBpsUO9fgFsU2g3VHshcMG7TC875NVfQxgNJzxLHKvgk+wtcG+SPGn7jqODs2GdQYh30+xnPW+yd4ABmcHWJY2FSaAA
+                 AAAElFTkSuQmCC
+                  '''
+    return saveIcon
+
+
+
+    emailIcon = ''
+    passwordIcon = ''
