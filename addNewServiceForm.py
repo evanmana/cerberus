@@ -2,7 +2,11 @@ from tkinter import *
 import sqlite3
 from tkinter.ttk import Combobox
 from cryptography.fernet import Fernet
+
+import categoriesList
+import cerberusCryptography
 import mainForm
+import icons
 
 
 def addNewServiceForm(self):
@@ -20,7 +24,7 @@ def addNewServiceForm(self):
         mainForm.Cerberus.loadTable(self)
 
     def insertNewService(event=NONE):
-        key = mainForm.Cerberus.getMasterToken()
+        key = cerberusCryptography.getMasterKey()
         cipher_suite = Fernet(key)
 
         if eCategory.get() != '':
@@ -62,6 +66,8 @@ def addNewServiceForm(self):
         username = cipher_suite.encrypt(bytes(username, encoding="UTF-8"))
         password = cipher_suite.encrypt(bytes(password, encoding="UTF-8"))
         value = cipher_suite.encrypt(bytes(value, encoding="UTF-8"))
+        category = cipher_suite.encrypt(bytes(category, encoding="UTF-8"))
+        serviceUrl = cipher_suite.encrypt(bytes(serviceUrl, encoding="UTF-8"))
 
         cursor = conn.cursor()
         try:
@@ -86,8 +92,8 @@ def addNewServiceForm(self):
     master.focus_force()
     master.grab_set()
 
-    master.title('Εισαγωγή Νέας Υπηρεσίας')
-    img = PhotoImage(data=self.getAppIcon())
+    master.title('Cerberus - Εισαγωγή Νέας Υπηρεσίας')
+    img = PhotoImage(data=icons.getAppIcon())
     master.wm_iconphoto(True, img)
     master.resizable(0, 0)
 
@@ -99,16 +105,13 @@ def addNewServiceForm(self):
     Label(master, text="Password:").grid(row=5, sticky="W", padx=5, pady=5)
     Label(master, text="ID:").grid(row=6, sticky="W", padx=5, pady=5)
 
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT distinct category FROM service where category<>'Προσωπικά Στοιχεία' and category<>'Κοινωνική Δικτύωση' and category<>'Email' and category<>'Banking' and category<>'Άλλο' ")
-    rows = cursor.fetchall()
-    cursor.close()
+    categoryExamples = ["Προσωπικά Στοιχεία", "Κοινωνική Δικτύωση", "Email", "Banking"]
+    categories = categoriesList.getCategoriesList()
+    for cat in categories:
+        if cat not in categoryExamples:
+            categoryExamples.append(cat)
 
-    eCategory = Combobox(master, width=33,
-                         values=("Προσωπικά Στοιχεία", "Κοινωνική Δικτύωση", "Email", "Banking", "Άλλο"))
-    for row in rows:
-        eCategory['values'] = eCategory['values'] + row
+    eCategory = Combobox(master, width=33, values=categoryExamples)
 
     eCategory.focus()
     eService = Entry(master, width=35)
