@@ -1,5 +1,5 @@
 from tkinter import *
-import mainForm
+import icons
 
 
 def foc_in(root, event=None):
@@ -28,13 +28,13 @@ def aboutApp():
     screenHeight = root.winfo_screenheight()
     positionRight = int(screenWidth / 2 - windowWidth / 2)
     positionDown = int(screenHeight / 3 - windowHeight / 2)
-    img = PhotoImage(data=mainForm.Cerberus.getAppIcon())
+    img = PhotoImage(data=icons.getAppIcon())
     root.wm_iconphoto(True, img)
 
     root.focus()
     root.geometry("{}x{}+{}+{}".format(windowWidth, windowHeight, positionRight, positionDown))
-    root.title('Περί Cerberus')
-    root.wm_attributes("-topmost", True)
+    root.title('Cerberus - Περί')
+    root.wm_attributes('-type', 'splash')
 
     bgImage = PhotoImage(data=getBgIcon())
     background_label = Label(root, image=bgImage)
