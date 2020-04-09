@@ -1,6 +1,8 @@
 import sqlite3
 from sqlite3 import Error
 
+database = r"cerberus.db"
+
 
 def create_connection(db_file):
     conn = None
@@ -22,8 +24,6 @@ def runSQLStatement(conn, create_table_sql):
 
 
 def main():
-    database = r"cerberusTest.db"
-
     sqlCreateCerberusTable = """ 
                                 CREATE TABLE IF NOT EXISTS `service` (
                                 `id`	INTEGER NOT NULL,
@@ -47,6 +47,7 @@ def main():
                                 CREATE TABLE IF NOT EXISTS `cerberusParameters` (
                                 `primaryEmail`	TEXT NOT NULL,
                                 `masterToken`	TEXT NOT NULL,
+                                `salt`	TEXT NOT NULL,
                                 `version`	TEXT,
                                 `passwdLastUpdate`	TEXT
                                 );
@@ -65,7 +66,3 @@ def main():
         runSQLStatement(conn, sqlCreateCerberusParmTable)
     else:
         print("Error! cannot create the database connection.")
-
-
-if __name__ == '__main__':
-    main()
