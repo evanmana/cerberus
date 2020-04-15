@@ -13,4 +13,4 @@
                 (,-(,(,(,/      \,),),)
                                          
 
-Cerberus is a cross-platform Python based project which stores your accounts (username, passwords, emails, IDs) in case you have forgot one of them.
+Cerberus is a cross-platform Python based project which stores your accounts (username, passwords, emails, IDs) encrypted, in case you have forgot one of them.
